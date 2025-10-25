@@ -181,6 +181,14 @@
             <div class="text-gray-500 text-sm mb-1">每十分钟产速</div>
             <div class="text-xl font-semibold text-miner-blue"><span id="tenMinRate">0</span></div>
           </div>
+          
+          <!-- 利润率 -->
+          <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div class="text-gray-500 text-sm mb-1">利润率</div>
+            <div class="text-xl font-semibold" id="profitRateContainer">
+              <span id="profitRate" class="text-miner-green">0%</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -281,6 +289,7 @@
     const dailyRateElement = document.getElementById('dailyRate');
     const hourlyRateElement = document.getElementById('hourlyRate');
     const tenMinRateElement = document.getElementById('tenMinRate');
+    const profitRateElement = document.getElementById('profitRate');
     
     // 创建输入框
     formations.forEach((formation, index) => {
@@ -341,6 +350,12 @@
       const hourlyRate = dailyRate / 24;
       const tenMinRate = hourlyRate / 6;
       
+      // 计算利润率
+      let profitRate = 0;
+      if (cost > 0) {
+        profitRate = (profit / cost) * 100;
+      }
+      
       // 更新显示
       totalOutputElement.textContent = output.toFixed(2);
       totalCostElement.textContent = cost.toFixed(0);
@@ -348,14 +363,18 @@
       dailyRateElement.textContent = dailyRate.toFixed(2);
       hourlyRateElement.textContent = hourlyRate.toFixed(2);
       tenMinRateElement.textContent = tenMinRate.toFixed(2);
+      profitRateElement.textContent = profitRate.toFixed(2) + '%';
       
-      // 设置利润颜色
+      // 设置利润和利润率颜色
       if (profit > 0) {
         totalProfitElement.className = 'text-miner-green';
+        profitRateElement.className = 'text-miner-green';
       } else if (profit < 0) {
         totalProfitElement.className = 'text-miner-red';
+        profitRateElement.className = 'text-miner-red';
       } else {
         totalProfitElement.className = 'text-gray-500';
+        profitRateElement.className = 'text-gray-500';
       }
       
       // 添加高亮效果
