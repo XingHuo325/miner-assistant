@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>八卦阵法图 - 矿工星火助手</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d',
+            secondary: '#2a4365',
+            accent: '#f97316',
+            'accent-light': '#fdba74',
+            'miner-blue': '#3b82f6',
+            'miner-green': '#22c55e',
+            'miner-yellow': '#eab308',
+            'miner-purple': '#a855f7',
+            'miner-red': '#ef4444',
+            'miner-orange': '#f97316',
+            'miner-dark-green': '#15803d'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 1s ease-in',
+            'pulse-scale': 'pulseScale 0.5s ease-in-out'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            },
+            pulseScale: {
+              '0%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
+              '100%': { transform: 'scale(1)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-1;
+      }
+      .bg-gradient-primary {
+        @apply bg-gradient-to-br from-primary to-secondary;
+      }
+      .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent-light;
+      }
+      .bg-gradient-accent {
+        @apply bg-gradient-to-r from-accent to-accent-light;
+      }
+      .bg-gradient-red {
+        @apply bg-gradient-to-r from-red-500 to-orange-500;
+      }
+      .bg-gradient-blue {
+        @apply bg-gradient-to-r from-blue-500 to-blue-700;
+      }
+      .bagua-cell {
+        @apply border border-gray-300 p-3 text-center transition-all duration-200;
+      }
+      .highlight-active {
+        @apply bg-yellow-100 border-yellow-400 font-bold;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen relative">
+  <!-- 公众号信息 -->
+  <div class="fixed top-4 right-4 bg-gradient-red text-white px-4 py-2 rounded-full text-sm font-bold shadow-md z-50 animate-fade-in">
+    官方公众号：星火游戏社
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-primary text-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex items-center space-x-3">
+          <i class="fa fa fa-star text-accent text-2xl animate-pulse-slow"></i>
+          <h1 class="text-2xl md:text-3xl font-bold text-shadow">矿工星火助手</h1>
+        </a>
+      </div>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="hover:text-accent transition-colors">首页</a>
+        <a href="#" class="hover:text-accent transition-colors">帮助</a>
+        <a href="#" class="hover:text-accent transition-colors">设置</a>
+        <div class="flex items items-center space-x-2">
+          <i class="fa fa-user-circle text-xl"></i>
+          <span>矿工账号</span>
+        </div>
+      </div>
+      <button class="md:hidden text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <section class="mb-8 animate-fade-in">
+      <div class="flex items-center">
+        <a href="index.html" class="mr-4 text-primary hover:text-accent transition-colors">
+          <i class="fa fa-arrow-left text-xl"></i>
+        </a>
+        <div>
+          <h2 class="text-3xl font-bold text-primary">八卦阵法图</h2>
+          <p class="text-gray-600 mt-2">显示八卦与阵法的对应数量关系，每日更新八卦对应的阵法数量</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 八卦阵法表格 -->
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-fade-in" style="animation-delay: 0.1s">
+      <h3 class="text-xl font-bold mb-6 text-primary flex items-center">
+        <i class="fa fa-table mr-3 text-accent"></i> 八卦阵法对应统计表
+      </h3>
+      
+      <!-- 今日日期 -->
+      <div class="mb-4 flex justify-between items-center">
+        <div class="text-lg font-semibold text-primary">
+          <i class="fa fa-calendar mr-2 text-accent"></i>
+          <span id="currentDate"></span>
+        </div>
+        <div class="bg-yellow-50 border border-yellow-200 px-4 py-2 rounded-lg flex items-center">
+          <i class="fa fa-star text-yellow-500 mr-2"></i>
+          <span class="text-sm text-gray-700">今日八门金锁阵：<span id="todayBagua" class="font-bold text-accent">兑</span></span>
+          <span class="mx-2 text-gray-400">|</span>
+          <span class="text-sm text-gray-700">一字长蛇阵：<span id="todayBagua" class="font-bold text-accent">乾</span></span>
+        </div>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse" id="baguaTable">
+          <thead>
+            <tr>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">八卦</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">一字长蛇阵</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">二龙出水阵</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">天地三才阵</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">四门兜底阵</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">五虎群羊阵</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">六字连方阵</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">七星北斗阵</th>
+              <th class="bagua-cell bg-gray-100 font-bold text-primary">八门金锁阵</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 表格内容将通过JavaScript动态生成 -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 使用说明 -->
+    <section class="bg-white rounded-xl shadow-lg p-6 animate-fade-in" style="animation-delay: 0.2s">
+      <h3 class="text-xl font-bold mb-4 text-primary flex items-center">
+        <i class="fa fa-info-circle mr-3 text-accent"></i> 使用说明
+      </h3>
+      
+      <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <ul class="space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+            <span>表格中右上角显示的为今日八卦随机对应的阵法</span>
+         </li>
+ 	  <li class="flex items-start">
+            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+ 	    <span>表格中显示的数字为累计的八卦对应的阵法数量之和</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+            <span>数据由系统预设设置，每日自动更新</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-primary text-white py-6 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-lg font-bold flex items-center">
+            <i class="fa fa-star text-accent mr-2"></i> 矿工星火助手
+          </h3>
+          <p class="text-sm opacity-75 mt-1">您的一站式站式矿工辅助平台</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-question-circle"></i> 帮助中心
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-book"></i> 使用手册
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-envelope"></i> 联系我们
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-4 pt-4 text-center text-sm opacity-75">
+        <p>© 2025 矿工星火助手 版权所有</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 定义八卦和阵法名称
+    const baguaNames = ['乾', '坤', '震', '巽', '坎', '离', '艮', '兑'];
+    const formationNames = ['一字长蛇阵', '二龙出水阵', '天地三才阵', '四门兜底阵', '五虎群羊阵', '六字连方阵', '七星北斗阵', '八门金锁阵'];
+    
+    // 源码中预设的八卦阵法数据（作者可以填写）
+    const tableData = [
+      ['1', '1', '', '1', '', '', '', ''],
+      ['', '', '', '2', '', '1', '', ''],
+      ['', '1', '1', '', '1', '', '', ''],
+      ['', '', '1', '', '', '', '1', '1'],
+      ['', '', '', '', '1', '2', '', ''],
+      ['', '', '1', '', '', '', '1', '1'],
+      ['1', '1', '', '', '1', '', '', ''],
+      ['1', '', '', '', '', '', '1', '1']
+    ];
+    
+    // 获取DOM元素
+    const baguaTable = document.getElementById('baguaTable').querySelector('tbody');
+    const currentDateElement = document.getElementById('currentDate');
+    const todayBaguaElement = document.getElementById('todayBagua');
+    const todayFormationElement = document.getElementById('todayFormation');
+    
+    // 初始化表格
+    function initializeTable() {
+      baguaTable.innerHTML = '';
+      
+      baguaNames.forEach((bagua, rowIndex) => {
+        const row = document.createElement('tr');
+        
+        // 八卦名称单元格
+        const baguaCell = document.createElement('td');
+        baguaCell.className = 'bagua-cell bg-gray-50 font-bold text-primary';
+        baguaCell.textContent = bagua;
+        row.appendChild(baguaCell);
+        
+        // 数据单元格
+        formationNames.forEach((formation, colIndex) => {
+          const cell = document.createElement('td');
+          cell.className = 'bagua-cell';
+          cell.dataset.row = rowIndex;
+          cell.dataset.col = colIndex;
+          
+          // 显示预设数据
+          cell.textContent = tableData[rowIndex][colIndex] || '';
+          
+          row.appendChild(cell);
+        });
+        
+        baguaTable.appendChild(row);
+      });
+      
+      // 高亮今日八卦阵法
+      highlightTodayFormation();
+    }
+    
+    // 高亮今日八卦阵法
+    function highlightTodayFormation() {
+      // 移除所有高亮
+      const allCells = document.querySelectorAll('.bagua-cell');
+      allCells.forEach(cell => {
+        cell.classList.remove('highlight-active');
+      });
+      
+      // 今日八卦阵法索引（可以根据需要修改）
+      const todayBaguaIndex = 7; // 兑
+      const todayFormationIndex = 0; // 一字
+      
+      // 更新显示
+      todayBaguaElement.textContent = baguaNames[todayBaguaIndex];
+      todayFormationElement.textContent = formationNames[todayFormationIndex];
+      
+      // 高亮对应的单元格
+      const cellSelector = `.bagua-cell[data-row="${todayBaguaIndex}"][data-col="${todayFormationIndex}"]`;
+      const cell = document.querySelector(cellSelector);
+      if (cell) {
+        cell.classList.add('highlight-active');
+      }
+    }
+    
+    // 设置当前日期
+    function setCurrentDate() {
+      const now = new Date();
+      const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+      currentDateElement.textContent = now.toLocaleDateString('zh-CN', options);
+    }
+    
+    // 页面加载完成后的初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 设置当前日期
+      setCurrentDate();
+      
+      // 初始化表格
+      initializeTable();
+      
+      // 添加动画效果
+      const sections = document.querySelectorAll('section');
+      sections.forEach((section, index) => {
+        setTimeout(() => {
+          section.style.opacity = '1';
+          section.style.transform = 'translateY(0)';
+        }, 100 * index);
+      });
+    });
+  </script>
+</body>
+</html>
