@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魔族板块 - 矿工星火助手</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d',
+            secondary: '#2a4365',
+            accent: '#f97316',
+            'accent-light': '#fdba74',
+            'miner-blue': '#3b82f6',
+            'miner-green': '#22c55e',
+            'miner-yellow': '#eab308',
+            'miner-purple': '#a855f7',
+            'miner-red': '#ef4444',
+            'miner-orange': '#f97316',
+            'miner-dark-green': '#15803d',
+            'demon-purple': '#7e22ce',
+            'demon-dark-purple': '#4c1d95',
+            'demon-pink': '#ec4899',
+            'demon-dark': '#1e1b4b'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 1s ease-in',
+            'pulse-scale': 'pulseScale 0.5s ease-in-out',
+            'glow': 'glow 2s ease-in-out infinite alternate'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            },
+            pulseScale: {
+              '0%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
+              '100%': { transform: 'scale(1)' }
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 5px rgba(126, 34, 206, 0.5)' },
+              '100%': { boxShadow: '0 0 20px rgba(126, 34, 206, 0.8)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-1;
+      }
+      .bg-gradient-primary {
+        @apply bg-gradient-to-br from-primary to-secondary;
+      }
+      .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent-light;
+      }
+      .bg-gradient-accent {
+        @apply bg-gradient-to-r from-accent to-accent-light;
+      }
+      .bg-gradient-red {
+        @apply bg-gradient-to-r from-red-500 to-orange-500;
+      }
+      .bg-gradient-blue {
+        @apply bg-gradient-to-r from-blue-500 to-blue-700;
+      }
+      .bg-gradient-demon {
+        @apply bg-gradient-to-br from-demon-dark to-demon-purple;
+      }
+      .mine-cell {
+        @apply border border-gray-300 p-2 md:p-3 text-center transition-all duration-200;
+      }
+      .highlight-active {
+        @apply bg-purple-100 border-purple-400 font-bold;
+      }
+      .mine-input {
+        @apply w-full md:w-20 lg:w-24 text-center border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-demon-purple focus:border-transparent;
+      }
+      .profit-positive {
+        @apply text-green-600 font-medium;
+      }
+      .profit-negative {
+        @apply text-red-600 font-medium;
+      }
+      .tooltip {
+        @apply invisible absolute bg-gray-800 text-white text-xs rounded py-1 px-2 -mt-8 opacity-0 transition-opacity duration-300;
+        width: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+      .has-tooltip:hover .tooltip {
+        @apply visible opacity-100;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen relative">
+  <!-- 公众号信息 -->
+  <div class="fixed top-4 right-4 bg-gradient-red text-white px-4 py-2 rounded-full text-sm font-bold shadow-md z-50 animate-fade-in">
+    官方公众号：星火游戏社
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-demon text-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex items-center space-x-3">
+          <i class="fa fa-fire text-accent text-2xl animate-pulse-slow"></i>
+          <h1 class="text-2xl md:text-3xl font-bold text-shadow">矿工星火助手</h1>
+        </a>
+      </div>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="hover:text-accent transition-colors">首页</a>
+        <a href="#" class="hover:text-accent transition-colors">帮助</a>
+        <a href="#" class="hover:text-accent transition-colors">设置</a>
+        <div class="flex items items-center space-x-2">
+          <i class="fa fa-user-circle text-xl"></i>
+          <span>矿工账号</span>
+        </div>
+      </div>
+      <button class="md:hidden text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <section class="mb-8 animate-fade-in">
+      <div class="flex items-center">
+        <a href="index.html" class="mr-4 text-demon-purple hover:text-accent transition-colors">
+          <i class="fa fa-arrow-left text-xl"></i>
+        </a>
+        <div>
+          <h2 class="text-3xl font-bold text-demon-dark">魔族板块</h2>
+          <p class="text-gray-600 mt-2">魔族矿山开采收益计算器，计算不同级别矿山的投资回报</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 魔族矿山计算器 -->
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-fade-in" style="animation-delay: 0.1s">
+      <h3 class="text-xl font-bold mb-6 text-demon-dark flex items-center">
+        <i class="fa fa-diamond mr-3 text-demon-purple"></i> 魔族矿山收益计算器
+      </h3>
+      
+      <!-- 表格说明 -->
+      <div class="mb-4 bg-purple-50 p-3 rounded-lg text-sm text-gray-700">
+        <i class="fa fa-info-circle text-demon-purple mr-2"></i>
+        下表展示了各级别矿山的基础数据，您可以在表格下方的开采配置区域设置开采数量
+      </div>
+      
+      <!-- 表格容器 - 添加横向滚动和最小宽度 -->
+      <div class="overflow-x-auto pb-4">
+        <div class="min-w-[800px]">
+          <table class="w-full border-collapse" id="mineTable">
+            <thead>
+              <tr>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">矿山级别</th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    开矿所需数量
+                    <span class="tooltip">开启该级别矿山所需的基础资源数量</span>
+                  </div>
+                </th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    总产出
+                    <span class="tooltip">该矿山开采后的总产出资源</span>
+                  </div>
+                </th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    利润
+                    <span class="tooltip">总产出减去开矿成本的净收益</span>
+                  </div>
+                </th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    上级收益
+                    <span class="tooltip">上级玩家可获得的收益</span>
+                  </div>
+                </th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    总利润
+                    <span class="tooltip">利润加上上级收益的总和</span>
+                  </div>
+                </th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    每日产速
+                    <span class="tooltip">每天的资源产出速度</span>
+                  </div>
+                </th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    每小时产速
+                    <span class="tooltip">每小时的资源产出速度</span>
+                  </div>
+                </th>
+                <th class="mine-cell bg-gray-100 font-bold text-demon-dark">
+                  <div class="has-tooltip">
+                    开矿数量限制
+                    <span class="tooltip">最多可开启的矿山数量</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 表格内容将通过JavaScript动态生成 -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- 移动端提示 -->
+      <div class="mt-2 text-center text-sm text-gray-500 md:hidden">
+        <i class="fa fa-arrows-h mr-1"></i> 左右滑动查看完整表格
+      </div>
+    </section>
+
+    <!-- 开采配置区域 -->
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-fade-in" style="animation-delay: 0.2s">
+      <h3 class="text-xl font-bold mb-6 text-demon-dark flex items-center">
+        <i class="fa fa-sliders mr-3 text-demon-purple"></i> 开采配置
+      </h3>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6" id="mineConfigContainer">
+        <!-- 开采配置将通过JavaScript动态生成 -->
+      </div>
+    </section>
+
+    <!-- 总计收益 -->
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-fade-in" style="animation-delay: 0.3s">
+      <h3 class="text-xl font-bold mb-6 text-demon-dark flex items-center">
+        <i class="fa fa-line-chart mr-3 text-demon-purple"></i> 总计收益分析
+      </h3>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 总投入 -->
+        <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-lg border border-gray-200">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-lg font-semibold text-gray-700">总投入</h4>
+            <i class="fa fa-money text-demon-purple"></i>
+          </div>
+          <p class="text-3xl font-bold text-demon-dark" id="totalCost">0</p>
+          <p class="text-sm text-gray-500 mt-1">所有矿山的总投入成本</p>
+        </div>
+        
+        <!-- 总产出 -->
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-lg font-semibold text-gray-700">总产出</h4>
+            <i class="fa fa-line-chart text-demon-purple"></i>
+          </div>
+          <p class="text-3xl font-bold text-demon-purple" id="totalOutput">0</p>
+          <p class="text-sm text-gray-500 mt-1">所有矿山的总产出资源</p>
+        </div>
+        
+        <!-- 总利润 -->
+        <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-lg font-semibold text-gray-700">总利润</h4>
+            <i class="fa fa-rocket text-green-600"></i>
+          </div>
+          <p class="text-3xl font-bold text-green-600" id="totalProfit">0</p>
+          <p class="text-sm text-gray-500 mt-1">所有矿山的总利润收益</p>
+        </div>
+        
+        <!-- 总利润率 -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-lg font-semibold text-gray-700">总利润率</h4>
+            <i class="fa fa-percent text-blue-600"></i>
+          </div>
+          <p class="text-3xl font-bold text-blue-600" id="totalProfitRate">0%</p>
+          <p class="text-sm text-gray-500 mt-1">总利润与总投入的比率</p>
+        </div>
+        
+        <!-- 每日总产速 -->
+        <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-lg border border-yellow-200">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-lg font-semibold text-gray-700">每日总产速</h4>
+            <i class="fa fa-sun-o text-yellow-500"></i>
+          </div>
+          <p class="text-3xl font-bold text-yellow-500" id="totalDailyRate">0</p>
+          <p class="text-sm text-gray-500 mt-1">所有矿山每天的总产出速度</p>
+        </div>
+        
+        <!-- 每小时总产速 -->
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
+          <div class="flex justify-between items-center mb-2">
+            <h4 class="text-lg font-semibold text-gray-700">每小时总产速</h4>
+            <i class="fa fa-clock-o text-orange-500"></i>
+          </div>
+          <p class="text-3xl font-bold text-orange-500" id="totalHourlyRate">0</p>
+          <p class="text-sm text-gray-500 mt-1">所有矿山每小时的总产出速度</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 开采数量限制提示 -->
+    <section class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-fade-in" style="animation-delay: 0.4s">
+      <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+        <div class="flex items-start">
+          <i class="fa fa-exclamation-circle text-yellow-500 text-xl mt-1 mr-3"></i>
+          <div>
+            <h3 class="text-lg font-bold text-yellow-800 mb-2">开采数量限制说明</h3>
+            <p class="text-gray-700">
+              系统限制：所有矿山的开采数量之和不能超过17个。当您输入的数量导致总数超过限制时，
+              系统会自动将刚填写的数据归零并提示您。请合理安排不同级别矿山的开采数量，以获得最佳收益。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 使用说明 -->
+    <section class="bg-white rounded-xl shadow-lg p-6 animate-fade-in" style="animation-delay: 0.5s">
+      <h3 class="text-xl font-bold mb-4 text-demon-dark flex items-center">
+        <i class="fa fa-info-circle mr-3 text-demon-purple"></i> 使用说明
+      </h3>
+      
+      <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+        <ul class="space-y-2 text-gray-700">
+          <li class="flex items-start">
+            <i class="fa fa-check-circle text-demon-purple mt-1 mr-2"></i>
+            <span>在"开采配置"区域输入您要开采的各个级别矿山数量</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fa fa-check-circle text-demon-purple mt-1 mr-2"></i>
+            <span>系统会自动计算总投入、总产出、总利润和各项产速</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fa fa-check-circle text-demon-purple mt-1 mr-2"></i>
+            <span>系统会自动检查开采数量限制，确保总开采数量不超过17个</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fa fa-check-circle text-demon-purple mt-1 mr-2"></i>
+            <span>数据实时更新，帮助您做出最优的矿山投资决策</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-demon-dark text-white py-6 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-lg font-bold flex items-center">
+            <i class="fa fa-fire text-accent mr-2"></i> 矿工星火助手
+          </h3>
+          <p class="text-sm opacity-75 mt-1">您的一站式站式矿工辅助平台</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-question-circle"></i> 帮助中心
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-book"></i> 使用手册
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-envelope"></i> 联系我们
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-4 pt-4 text-center text-sm opacity-75">
+        <p>© 2025 矿工星火助手 版权所有</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 魔族矿山数据
+    const mineData = [
+      {
+        level: "初级",
+        cost: 100,
+        totalOutput: 120,
+        profit: 20,
+        upperProfit: 5,
+        totalProfit: 25,
+        dailyRate: 125.0 / 30,
+        hourlyRate: 125.0 / (30 * 24),
+        maxCount: 17
+      },
+      {
+        level: "中级",
+        cost: 1000,
+        totalOutput: 1220,
+        profit: 220,
+        upperProfit: 55,
+        totalProfit: 275,
+        dailyRate: 1275.0 / 30,
+        hourlyRate: 1275.0 / (30 * 24),
+        maxCount: 17
+      },
+      {
+        level: "高级",
+        cost: 5000,
+        totalOutput: 6200,
+        profit: 1200,
+        upperProfit: 300,
+        totalProfit: 1500,
+        dailyRate: 6500.0 / 30,
+        hourlyRate: 6500.0 / (30 * 24),
+        maxCount: 17
+      },
+      {
+        level: "超级",
+        cost: 10000,
+        totalOutput: 12600,
+        profit: 2600,
+        upperProfit: 650,
+        totalProfit: 3250,
+        dailyRate: 13250.0 / 30,
+        hourlyRate: 13250.0 / (30 * 24),
+        maxCount: 3
+      },
+      {
+        level: "特级",
+        cost: 50000,
+        totalOutput: 63500,
+        profit: 13500,
+        upperProfit: 3375,
+        totalProfit: 16875,
+        dailyRate: 66875.0 / 30,
+        hourlyRate: 66875.0 / (30 * 24),
+        maxCount: 2
+      },
+      {
+        level: "顶级",
+        cost: 100000,
+        totalOutput: 128000,
+        profit: 28000,
+        upperProfit: 7000,
+        totalProfit: 35000,
+        dailyRate: 135000.0 / 30,
+        hourlyRate: 135000.0 / (30 * 24),
+        maxCount: 1
+      }
+    ];
+    
+    // 获取DOM元素
+    const mineTable = document.getElementById('mineTable').querySelector('tbody');
+    const mineConfigContainer = document.getElementById('mineConfigContainer');
+    const totalCostElement = document.getElementById('totalCost');
+    const totalOutputElement = document.getElementById('totalOutput');
+    const totalProfitElement = document.getElementById('totalProfit');
+    const totalProfitRateElement = document.getElementById('totalProfitRate');
+    const totalDailyRateElement = document.getElementById('totalDailyRate');
+    const totalHourlyRateElement = document.getElementById('totalHourlyRate');
+    
+    // 开采数量数组
+    let mineCounts = new Array(mineData.length).fill(0);
+    
+    // 初始化表格
+    function initializeTable() {
+      mineTable.innerHTML = '';
+      
+      mineData.forEach((mine, index) => {
+        const row = document.createElement('tr');
+        
+        // 矿山级别
+        const levelCell = document.createElement('td');
+        levelCell.className = 'mine-cell bg-gray-50 font-bold text-demon-dark';
+        levelCell.textContent = mine.level;
+        row.appendChild(levelCell);
+        
+        // 开矿所需数量
+        const costCell = document.createElement('td');
+        costCell.className = 'mine-cell';
+        costCell.textContent = formatNumber(mine.cost);
+        row.appendChild(costCell);
+        
+        // 总产出
+        const outputCell = document.createElement('td');
+        outputCell.className = 'mine-cell';
+        outputCell.textContent = formatNumber(mine.totalOutput);
+        row.appendChild(outputCell);
+        
+        // 利润
+        const profitCell = document.createElement('td');
+        profitCell.className = 'mine-cell';
+        profitCell.textContent = formatNumber(mine.profit);
+        profitCell.classList.add(mine.profit >= 0 ? 'profit-positive' : 'profit-negative');
+        row.appendChild(profitCell);
+        
+        // 上级收益
+        const upperProfitCell = document.createElement('td');
+        upperProfitCell.className = 'mine-cell';
+        upperProfitCell.textContent = formatNumber(mine.upperProfit);
+        row.appendChild(upperProfitCell);
+        
+        // 总利润
+        const totalProfitCell = document.createElement('td');
+        totalProfitCell.className = 'mine-cell';
+        totalProfitCell.textContent = formatNumber(mine.totalProfit);
+        totalProfitCell.classList.add(mine.totalProfit >= 0 ? 'profit-positive' : 'profit-negative');
+        row.appendChild(totalProfitCell);
+        
+        // 每日产速
+        const dailyRateCell = document.createElement('td');
+        dailyRateCell.className = 'mine-cell';
+        dailyRateCell.textContent = formatNumber(mine.dailyRate);
+        row.appendChild(dailyRateCell);
+        
+        // 每小时产速
+        const hourlyRateCell = document.createElement('td');
+        hourlyRateCell.className = 'mine-cell';
+        hourlyRateCell.textContent = formatNumber(mine.hourlyRate);
+        row.appendChild(hourlyRateCell);
+        
+        // 开矿数量限制
+        const maxCountCell = document.createElement('td');
+        maxCountCell.className = 'mine-cell';
+        maxCountCell.textContent = mine.maxCount;
+        row.appendChild(maxCountCell);
+        
+        mineTable.appendChild(row);
+      });
+    }
+    
+    // 初始化开采配置区域
+    function initializeMineConfig() {
+      mineConfigContainer.innerHTML = '';
+      
+      mineData.forEach((mine, index) => {
+        const configItem = document.createElement('div');
+        configItem.className = 'bg-white rounded-xl shadow-md p-4 text-center card-hover';
+        
+        const mineLevel = document.createElement('div');
+        mineLevel.className = 'font-bold mb-2 text-demon-dark';
+        mineLevel.textContent = mine.level;
+        
+        const label = document.createElement('label');
+        label.className = 'block text-sm text-gray-500 mb-2';
+        label.textContent = `开采数量 (最大: ${mine.maxCount})`;
+        
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0';
+        input.max = mine.maxCount;
+        input.value = '0';
+        input.className = 'w-full p-2 border-2 border-gray-200 rounded-lg text-center focus:border-demon-purple focus:ring focus:ring-demon-purple focus:ring-opacity-20 transition-all';
+        input.dataset.index = index;
+        
+        input.addEventListener('input', function() {
+          const idx = parseInt(this.dataset.index);
+          let value = parseInt(this.value) || 0;
+          
+          // 限制最大值
+          if (value > mine.maxCount) {
+            alert(`警告：${mine.level}矿山最多只能开采${mine.maxCount}个！`);
+            value = 0;
+            this.value = value;
+          }
+          
+          // 限制最小值
+          if (value < 0) {
+            value = 0;
+            this.value = value;
+          }
+          
+          // 计算总数量
+          let totalCount = 0;
+          for (let i = 0; i < mineCounts.length; i++) {
+            if (i === idx) continue;
+            totalCount += mineCounts[i];
+          }
+          
+          // 检查总数量是否超过17
+          if (totalCount + value > 17) {
+            alert('警告：正在开采的数量之和不能超过17个！');
+            value = 0;
+            this.value = value;
+          }
+          
+          mineCounts[idx] = value;
+          updateTotals();
+        });
+        
+        configItem.appendChild(mineLevel);
+        configItem.appendChild(label);
+        configItem.appendChild(input);
+        mineConfigContainer.appendChild(configItem);
+      });
+    }
+    
+    // 更新总计数据
+    function updateTotals() {
+      let totalCost = 0;
+      let totalOutput = 0;
+      let totalProfit = 0;
+      let totalDailyRate = 0;
+      let totalHourlyRate = 0;
+      
+      mineData.forEach((mine, index) => {
+        const count = mineCounts[index];
+        totalCost += mine.cost * count;
+        totalOutput += mine.totalOutput * count;
+        totalProfit += mine.totalProfit * count;
+        totalDailyRate += mine.dailyRate * count;
+        totalHourlyRate += mine.hourlyRate * count;
+      });
+      
+      // 计算利润率
+      const profitRate = totalCost > 0 ? (totalProfit / totalCost) * 100 : 0;
+      
+      // 更新DOM
+      totalCostElement.textContent = formatNumber(totalCost);
+      totalOutputElement.textContent = formatNumber(totalOutput);
+      totalProfitElement.textContent = formatNumber(totalProfit);
+      totalProfitRateElement.textContent = profitRate.toFixed(2) + '%';
+      totalDailyRateElement.textContent = formatNumber(totalDailyRate);
+      totalHourlyRateElement.textContent = formatNumber(totalHourlyRate);
+      
+      // 根据利润率设置颜色
+      if (profitRate > 0) {
+        totalProfitRateElement.classList.remove('text-red-600');
+        totalProfitRateElement.classList.add('text-green-600');
+      } else if (profitRate < 0) {
+        totalProfitRateElement.classList.remove('text-green-600');
+        totalProfitRateElement.classList.add('text-red-600');
+      } else {
+        totalProfitRateElement.classList.remove('text-green-600', 'text-red-600');
+        totalProfitRateElement.classList.add('text-gray-600');
+      }
+    }
+    
+    // 格式化数字
+    function formatNumber(num) {
+      return num.toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+    }
+    
+    // 页面加载完成后的初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 初始化表格
+      initializeTable();
+      
+      // 初始化开采配置区域
+      initializeMineConfig();
+      
+      // 添加动画效果
+      const sections = document.querySelectorAll('section');
+      sections.forEach((section, index) => {
+        setTimeout(() => {
+          section.style.opacity = '1';
+          section.style.transform = 'translateY(0)';
+        }, 100 * index);
+      });
+    });
+  </script>
+</body>
+</html>
