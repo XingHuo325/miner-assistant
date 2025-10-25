@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>动画测试页面</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d',
+            secondary: '#2a4365',
+            accent: '#f97316',
+            'accent-light': '#fdba74',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 1s ease-in',
+            'pulse-scale': 'pulseScale 0.5s ease-in-out'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            },
+            pulseScale: {
+              '0%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
+              '100%': { transform: 'scale(1)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+  <div class="container mx-auto">
+    <h1 class="text-3xl font-bold text-primary mb-8">动画测试页面</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- 测试fade-in动画 -->
+      <div class="bg-white p-6 rounded-xl shadow-lg animate-fade-in">
+        <h2 class="text-xl font-bold mb-4">Fade-in 动画测试</h2>
+        <p>这个区块应该有淡入并向上移动的动画效果。</p>
+      </div>
+      
+      <!-- 测试float动画 -->
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Float 动画测试</h2>
+        <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto animate-float">
+          <i class="fa fa-star text-white text-2xl"></i>
+        </div>
+        <p class="text-center mt-4">这个星星应该有上下浮动的动画效果。</p>
+      </div>
+      
+      <!-- 测试pulse-slow动画 -->
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Pulse-slow 动画测试</h2>
+        <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto animate-pulse-slow">
+          <i class="fa fa-heart text-white text-2xl"></i>
+        </div>
+        <p class="text-center mt-4">这个心形应该有缓慢的脉冲动画效果。</p>
+      </div>
+      
+      <!-- 测试pulse-scale动画 -->
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Pulse-scale 动画测试</h2>
+        <button id="testButton" class="bg-accent text-white px-6 py-3 rounded-lg font-bold hover:bg-opacity-90 transition-colors">
+          点击测试缩放动画
+        </button>
+        <p class="mt-4">点击按钮后，按钮应该有缩放的动画效果。</p>
+      </div>
+    </div>
+    
+    <div class="mt-8">
+      <a href="formation-diagram.html" class="inline-flex items-center text-primary hover:text-accent">
+        <i class="fa fa-arrow-left mr-2"></i> 返回阵法图页面
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // 测试pulse-scale动画
+    const testButton = document.getElementById('testButton');
+    testButton.addEventListener('click', function() {
+      this.classList.add('animate-pulse-scale');
+      setTimeout(() => {
+        this.classList.remove('animate-pulse-scale');
+      }, 500);
+    });
+  </script>
+</body>
+</html>
