@@ -145,9 +145,9 @@
         </div>
         <div class="bg-yellow-50 border border-yellow-200 px-4 py-2 rounded-lg flex items-center">
           <i class="fa fa-star text-yellow-500 mr-2"></i>
-          <span class="text-sm text-gray-700">今日八门金锁阵：<span id="todayBagua" class="font-bold text-accent">兑</span></span>
+          <span class="text-sm text-gray-700">今日八门金锁阵：<span id="todayBagua" class="font-bold text-accent">乾</span></span>
           <span class="mx-2 text-gray-400">|</span>
-          <span class="text-sm text-gray-700">一字长蛇阵：<span id="todayBagua" class="font-bold text-accent">艮</span></span>
+          <span class="text-sm text-gray-700">一字长蛇阵：<span id="todayBagua" class="font-bold text-accent">兑</span></span>
         </div>
       </div>
       
@@ -233,14 +233,14 @@
     
     // 源码中预设的八卦阵法数据（作者可以填写）
     const tableData = [
-      ['1', '2', '', '1', '', '', '', ''], //乾
-      ['', '', '', '2', '', '2', '', ''],//坤
-      ['', '1', '1', '1', '1', '', '', ''],//震
-      ['', '', '2', '', '', '', '1', '1'],//巽
-      ['', '', '', '', '1', '2', '', '1'],//坎
-      ['', '', '1', '', '', '', '2', '1'],//离
-      ['2', '1', '', '', '1', '', '', ''],//艮
-      ['1', '', '', '', '1', '', '1', '1']//兑
+      ['1', '2', '', '1', '', '', '', '1'], //乾
+      ['', '', '1', '2', '', '2', '', ''],//坤
+      ['', '1', '1', '1', '1', '', '1', ''],//震
+      ['', '1', '2', '', '', '', '1', '1'],//巽
+      ['', '', '', '1', '1', '2', '', '1'],//坎
+      ['', '', '1', '', '1', '', '2', '1'],//离
+      ['2', '1', '', '', '1', '1', '', ''],//艮
+      ['2', '', '', '', '1', '', '1', '1']//兑
     ];
     
     // 获取DOM元素
@@ -291,7 +291,7 @@
       });
       
       // 今日八卦阵法索引（可以根据需要修改）
-      const todayBaguaIndex = 4; // 兑
+      const todayBaguaIndex = 0; // 兑
       const todayFormationIndex = 0; // 一字
       
       // 更新显示
