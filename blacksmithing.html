@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>锻造室 - 矿工星火助手</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d',
+            secondary: '#2a4365',
+            accent: '#f97316',
+            'accent-light': '#fdba74',
+            'miner-blue': '#3b82f6',
+            'miner-green': '#22c55e',
+            'miner-yellow': '#eab308',
+            'miner-purple': '#a855f7',
+            'miner-red': '#ef4444',
+            'miner-orange': '#f97316',
+            'miner-dark-green': '#15803d'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 1s ease-in',
+            'pulse-scale': 'pulseScale 0.5s ease-in-out'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            },
+            pulseScale: {
+              '0%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
+              '100%': { transform: 'scale(1)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-1;
+      }
+      .bg-gradient-primary {
+        @apply bg-gradient-to-br from-primary to-secondary;
+      }
+      .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent-light;
+      }
+      .bg-gradient-red {
+        @apply bg-gradient-to-r from-red-500 to-orange-500;
+      }
+      .input-focus {
+        @apply focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all;
+      }
+      .shadow-soft {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+      .table-responsive {
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen relative">
+  <!-- 公众号信息 -->
+  <div class="fixed top-4 right-4 bg-gradient-red text-white px-4 py-2 rounded-full text-sm font-bold shadow-md z-50 animate-fade-in">
+    官方公众号：星火游戏社
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-primary text-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex items-center space-x-3">
+          <i class="fa fa-fire text-accent text-2xl animate-pulse-slow"></i>
+          <h1 class="text-2xl md:text-3xl font-bold text-shadow">矿工星火助手</h1>
+        </a>
+      </div>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="hover:text-accent transition-colors">首页</a>
+        <a href="#" class="hover:text-accent transition-colors">帮助</a>
+        <a href="#" class="hover:text-accent transition-colors">设置</a>
+        <div class="flex items-center space-x-2">
+          <i class="fa fa-user-circle text-xl"></i>
+          <span>矿工账号</span>
+        </div>
+      </div>
+      <button class="md:hidden text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <div class="mb-8 animate-fade-in">
+      <div class="flex items-center mb-4">
+        <a href="index.html" class="text-primary mr-4">
+          <i class="fa fa-arrow-left text-xl"></i>
+        </a>
+        <h2 class="text-3xl font-bold text-primary">锻造室</h2>
+      </div>
+      <p class="text-gray-600 ml-9">查看不同锻造等级的收益数据，规划您的锻造投资策略</p>
+    </div>
+
+    <!-- 锻造室数据表格 -->
+    <div class="bg-white rounded-xl shadow-lg p-4 mb-8 animate-fade-in" style="animation-delay: 0.2s;">
+      <div class="mb-4 flex items-center">
+        <i class="fa fa-table text-accent mr-2"></i>
+        <h3 class="text-lg font-semibold text-primary">锻造数据表</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gradient-to-r from-orange-500 to-yellow-500 text-white">
+            <tr>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">锻造等级</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">花费银币</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">解锁锻造室</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">每日投入</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">锻造天数</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">总投入</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">总收入</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">纯收益</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">收益率</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">日化率</th>
+              <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">月化率</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200" id="blacksmithingTableBody">
+            <!-- 表格数据将通过JavaScript动态生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 收益概览卡片 -->
+    <div class="bg-white rounded-xl shadow-md p-6 mb-8 animate-fade-in" style="animation-delay: 0.3s;">
+      <h3 class="text-xl font-semibold mb-4 flex items-center text-primary">
+        <i class="fa fa-bar-chart text-accent mr-2"></i>
+        收益概览
+      </h3>
+      
+      <!-- 配置区域 -->
+      <div class="space-y-4 mb-6" id="configContainer">
+        <div class="flex flex-wrap gap-4 items-center config-row">
+          <div class="flex items-center">
+            <label class="mr-2 text-gray-700">锻造室等级：</label>
+            <select class="blacksmith-level border border-gray-300 rounded-md px-2 py-1 input-focus">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+            </select>
+          </div>
+          <div class="flex items-center">
+            <label class="mr-2 text-gray-700">数量：</label>
+            <select class="blacksmith-count border border-gray-300 rounded-md px-2 py-1 input-focus">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+            </select>
+          </div>
+          <button class="delete-row bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded-md transition-colors hidden">
+            <i class="fa fa-trash-o mr-1"></i>删除
+          </button>
+        </div>
+      </div>
+      
+      <!-- 添加按钮 -->
+      <button id="addConfigRow" class="bg-accent hover:bg-orange-600 text-white px-4 py-2 rounded-md transition-colors mb-6 flex items-center">
+        <i class="fa fa-plus mr-2"></i>添加配置行
+      </button>
+      
+      <!-- 计算结果 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+          <span class="text-gray-700">每日总投入：</span>
+          <span class="font-bold text-gray-900" id="dailyTotalInvestment">0 银两</span>
+        </div>
+        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+          <span class="text-gray-700">最终总投入：</span>
+          <span class="font-bold text-gray-900" id="finalTotalInvestment">0 银两</span>
+        </div>
+        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+          <span class="text-gray-700">总收益：</span>
+          <span class="font-bold text-gray-900" id="totalIncome">0 银两</span>
+        </div>
+        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+          <span class="text-gray-700">总利润：</span>
+          <span class="font-bold text-gray-900" id="totalProfit">0 银两</span>
+        </div>
+        <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg md:col-span-2">
+          <span class="text-gray-700">利润率：</span>
+          <span class="font-bold text-gray-900" id="profitRate">0.00%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 说明部分 -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-miner-orange animate-fade-in" style="animation-delay: 0.5s;">
+      <h3 class="text-lg font-semibold mb-4 flex items-center text-primary">
+        <i class="fa fa-info-circle text-miner-orange mr-2"></i>
+        使用说明
+      </h3>
+      
+      <div class="text-gray-700 space-y-3">
+        <p>1. 锻造室等级：从初级到轮回共16个等级，等级越高解锁的锻造室越高级</p>
+        <p>2. 花费银币：解锁对应锻造等级所需的银币，永久解锁</p>
+        <p>3. 每日投入：每日需要投入的精铁数量（1宝石=1精铁）</p>
+        <p>4. 锻造天数：完成一次锻造所需的天数</p>
+        <p>5. 总投入 = 每日投入 × 锻造天数</p>
+        <p>6. 收益率 = 纯收益 / 总投入</p>
+        <p>7. 日化率 = 收益率 / 锻造天数 × 100%</p>
+        <p>8. 月化率 = 日化率 × 30</p>
+      </div>
+    </div>
+  </main>
+
+    <!-- 页脚 -->
+  <footer class="bg-primary text-white py-6 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-lg font-bold flex items-center">
+            <i class="fa fa-star text-accent mr-2"></i> 矿工星火助手
+          </h3>
+          <p class="text-sm opacity-75 mt-1">您的一站式矿工辅助平台</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-question-circle"></i> 帮助中心
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-book"></i> 使用手册
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-envelope"></i> 联系我们
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-4 pt-4 text-center text-sm opacity-75">
+        <p>© 2025 矿工星火助手 版权所有</p>
+        
+      </div>
+    </div>
+  </footer>
+
+  <!-- 自定义模态框 -->
+  <div id="customModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-white rounded-xl shadow-2xl p-6 max-w-md w-full transform transition-transform duration-300 scale-95">
+      <div class="text-center mb-4">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 text-accent mb-4">
+          <i class="fa fa-exclamation-triangle text-3xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-primary mb-2" id="modalTitle">提示</h3>
+        <p class="text-gray-600" id="modalMessage">这里是提示消息内容</p>
+      </div>
+      <div class="flex justify-center">
+        <button id="modalCloseBtn" class="bg-accent hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-lg transition-colors shadow-md hover:shadow-lg">
+          确定
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 自定义模态框函数
+    function showCustomModal(title, message) {
+      const modal = document.getElementById('customModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      
+      modal.classList.remove('hidden');
+      // 触发重绘
+      void modal.offsetWidth;
+      modal.classList.add('opacity-100');
+      modal.querySelector('div').classList.add('scale-100');
+    }
+    
+    // 关闭模态框
+    document.getElementById('modalCloseBtn').addEventListener('click', function() {
+      const modal = document.getElementById('customModal');
+      modal.classList.remove('opacity-100');
+      modal.querySelector('div').classList.remove('scale-100');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    });
+    // 锻造室数据
+    const blacksmithingData = [
+      { level: 1, cost: 5, room: '初级', dailyInvestment: 10, days: 5, totalInvestment: 50, totalIncome: 53, profit: 3, profitRate: 0.06, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 2, cost: 10, room: '中级', dailyInvestment: 20, days: 10, totalInvestment: 200, totalIncome: 224, profit: 24, profitRate: 0.12, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 3, cost: 15, room: '高级', dailyInvestment: 50, days: 15, totalInvestment: 750, totalIncome: 885, profit: 135, profitRate: 0.18, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 4, cost: 20, room: '特级', dailyInvestment: 100, days: 20, totalInvestment: 2000, totalIncome: 2480, profit: 480, profitRate: 0.24, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 5, cost: 25, room: '顶级', dailyInvestment: 150, days: 25, totalInvestment: 3750, totalIncome: 4875, profit: 1125, profitRate: 0.3, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 6, cost: 30, room: '王级', dailyInvestment: 200, days: 30, totalInvestment: 6000, totalIncome: 8160, profit: 2160, profitRate: 0.36, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 7, cost: 35, room: '皇级', dailyInvestment: 250, days: 35, totalInvestment: 8750, totalIncome: 12425, profit: 3675, profitRate: 0.42, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 8, cost: 40, room: '神级', dailyInvestment: 300, days: 40, totalInvestment: 12000, totalIncome: 17760, profit: 5760, profitRate: 0.48, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 9, cost: 45, room: '仙级', dailyInvestment: 350, days: 45, totalInvestment: 15750, totalIncome: 24255, profit: 8505, profitRate: 0.54, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 10, cost: 50, room: '魔级', dailyInvestment: 400, days: 50, totalInvestment: 20000, totalIncome: 32000, profit: 12000, profitRate: 0.6, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 11, cost: 55, room: '天地', dailyInvestment: 450, days: 55, totalInvestment: 24750, totalIncome: 41085, profit: 16335, profitRate: 0.66, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 12, cost: 60, room: '九霄', dailyInvestment: 500, days: 60, totalInvestment: 30000, totalIncome: 51600, profit: 21600, profitRate: 0.72, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 13, cost: 65, room: '混沌', dailyInvestment: 550, days: 65, totalInvestment: 35750, totalIncome: 63635, profit: 27885, profitRate: 0.78, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 14, cost: 70, room: '鸿蒙', dailyInvestment: 600, days: 70, totalInvestment: 42000, totalIncome: 77280, profit: 35280, profitRate: 0.84, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 15, cost: 75, room: '造化', dailyInvestment: 700, days: 75, totalInvestment: 52500, totalIncome: 99750, profit: 47250, profitRate: 0.9, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 16, cost: 80, room: '轮回', dailyInvestment: 800, days: 80, totalInvestment: 64000, totalIncome: 125440, profit: 61440, profitRate: 0.96, dailyRate: '1.20%', monthlyRate: '36.00%' }
+    ];
+
+    // 生成表格数据
+    function generateTableData() {
+      const tableBody = document.getElementById('blacksmithingTableBody');
+      tableBody.innerHTML = '';
+
+      blacksmithingData.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.className = index % 2 === 0 ? 'bg-orange-50' : 'bg-white';
+        row.className += ' hover:bg-orange-100 transition-colors';
+
+        row.innerHTML = `
+          <td class="px-4 py-3 whitespace-nowrap font-medium">${item.level}</td>
+          <td class="px-4 py-3 whitespace-nowrap">${item.cost}</td>
+          <td class="px-4 py-3 whitespace-nowrap">${item.room}</td>
+          <td class="px-4 py-3 whitespace-nowrap">${item.dailyInvestment}</td>
+          <td class="px-4 py-3 whitespace-nowrap">${item.days}</td>
+          <td class="px-4 py-3 whitespace-nowrap font-medium text-gray-700">${item.totalInvestment}</td>
+          <td class="px-4 py-3 whitespace-nowrap font-medium">${item.totalIncome}</td>
+          <td class="px-4 py-3 whitespace-nowrap font-bold text-success">${item.profit}</td>
+          <td class="px-4 py-3 whitespace-nowrap text-accent">${(item.profitRate * 100).toFixed(2)}</td>
+          <td class="px-4 py-3 whitespace-nowrap font-medium">${item.dailyRate}</td>
+          <td class="px-4 py-3 whitespace-nowrap font-medium">${item.monthlyRate}</td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    // 计算总数量
+    function calculateTotalCount() {
+      const countElements = document.querySelectorAll('.blacksmith-count');
+      let totalCount = 0;
+      countElements.forEach(element => {
+        totalCount += parseInt(element.value) || 0;
+      });
+      return totalCount;
+    }
+
+    // 添加配置行
+    function addConfigRow() {
+      const currentTotal = calculateTotalCount();
+      if (currentTotal >= 16) {
+            showCustomModal('添加限制', '数量之和已达到或超过16，无法添加更多配置行');
+            return;
+          }
+
+      const configContainer = document.getElementById('configContainer');
+      const newRow = document.createElement('div');
+      newRow.className = 'flex flex-wrap gap-4 items-center config-row';
+      
+      newRow.innerHTML = `
+        <div class="flex items-center">
+          <label class="mr-2 text-gray-700">锻造室等级：</label>
+          <select class="blacksmith-level border border-gray-300 rounded-md px-2 py-1 input-focus">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+          </select>
+        </div>
+        <div class="flex items-center">
+          <label class="mr-2 text-gray-700">数量：</label>
+          <select class="blacksmith-count border border-gray-300 rounded-md px-2 py-1 input-focus">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+          </select>
+        </div>
+        <button class="delete-row bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1 rounded-md transition-colors">
+          <i class="fa fa-trash-o mr-1"></i>删除
+        </button>
+      `;
+
+      configContainer.appendChild(newRow);
+      
+      // 添加事件监听器
+      const deleteButton = newRow.querySelector('.delete-row');
+      deleteButton.addEventListener('click', () => {
+        newRow.remove();
+        updateCalculations();
+      });
+      
+      const levelSelect = newRow.querySelector('.blacksmith-level');
+      const countSelect = newRow.querySelector('.blacksmith-count');
+      levelSelect.addEventListener('change', updateCalculations);
+      
+      // 为新添加的数量选择框添加监控事件监听器
+      countSelect.addEventListener('change', function() {
+        // 获取其他所有数量选择框的值之和
+        let otherTotal = 0;
+        document.querySelectorAll('.blacksmith-count').forEach(item => {
+          if (item !== this) {
+            otherTotal += parseInt(item.value) || 0;
+          }
+        });
+        
+        // 获取当前修改的值
+        const currentValue = parseInt(this.value) || 0;
+        
+        // 检查总和是否超过16
+          if (otherTotal + currentValue > 16) {
+            showCustomModal('数量限制', '锻造室数量之和不能超过16！');
+            // 将当前选择框的值重置为1
+            this.value = 1;
+          }
+        
+        // 更新计算结果
+        updateCalculations();
+      });
+      
+      updateCalculations();
+    }
+
+    // 更新计算结果
+    function updateCalculations() {
+      let dailyTotalInvestment = 0;
+      let finalTotalInvestment = 0;
+      let totalIncome = 0;
+      
+      const configRows = document.querySelectorAll('.config-row');
+      configRows.forEach(row => {
+        const levelSelect = row.querySelector('.blacksmith-level');
+        const countSelect = row.querySelector('.blacksmith-count');
+        
+        if (levelSelect && countSelect) {
+          const level = parseInt(levelSelect.value) - 1; // 数组索引从0开始
+          const count = parseInt(countSelect.value);
+          
+          if (level >= 0 && level < blacksmithingData.length && count > 0) {
+            const data = blacksmithingData[level];
+            dailyTotalInvestment += data.dailyInvestment * count;
+            finalTotalInvestment += data.totalInvestment * count;
+            totalIncome += data.totalIncome * count;
+          }
+        }
+      });
+      
+      const totalProfit = totalIncome - finalTotalInvestment;
+      const profitRate = finalTotalInvestment > 0 ? (totalProfit / finalTotalInvestment) * 100 : 0;
+      
+      // 更新显示
+      document.getElementById('dailyTotalInvestment').textContent = `${dailyTotalInvestment}`;
+      document.getElementById('finalTotalInvestment').textContent = `${finalTotalInvestment}`;
+      document.getElementById('totalIncome').textContent = `${totalIncome}`;
+      document.getElementById('totalProfit').textContent = `${totalProfit}`;
+      document.getElementById('profitRate').textContent = `${profitRate.toFixed(2)}%`;
+    }
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      generateTableData();
+      
+      // 显示第一个删除按钮
+      const firstDeleteButton = document.querySelector('.delete-row');
+      if (firstDeleteButton) {
+        firstDeleteButton.classList.remove('hidden');
+      }
+      
+      // 添加事件监听器
+      document.getElementById('addConfigRow').addEventListener('click', addConfigRow);
+      
+      // 为等级选择框添加事件监听器
+      document.querySelectorAll('.blacksmith-level').forEach(select => {
+        select.addEventListener('change', updateCalculations);
+      });
+      
+      // 为数量选择框添加监控事件监听器
+      document.querySelectorAll('.blacksmith-count').forEach(select => {
+        select.addEventListener('change', function() {
+          // 获取其他所有数量选择框的值之和
+          let otherTotal = 0;
+          document.querySelectorAll('.blacksmith-count').forEach(item => {
+            if (item !== this) {
+              otherTotal += parseInt(item.value) || 0;
+            }
+          });
+          
+          // 获取当前修改的值
+          const currentValue = parseInt(this.value) || 0;
+          
+          // 检查总和是否超过16
+          if (otherTotal + currentValue > 16) {
+            showCustomModal('数量限制', '锻造室数量之和不能超过16！');
+            // 将当前选择框的值重置为1
+            this.value = 1;
+          }
+          
+          // 更新计算结果
+          updateCalculations();
+        });
+      });
+      
+      // 为第一个删除按钮添加事件监听器
+      if (firstDeleteButton) {
+        firstDeleteButton.addEventListener('click', function() {
+          if (document.querySelectorAll('.config-row').length > 1) {
+            this.closest('.config-row').remove();
+            updateCalculations();
+          } else {
+            showCustomModal('配置限制', '至少需要保留一行配置');
+          }
+        });
+      }
+      
+      // 初始计算
+      updateCalculations();
+    });
+  </script>
+</body>
+</html>

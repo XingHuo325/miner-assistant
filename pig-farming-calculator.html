@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>养猪计算器</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d',
+            secondary: '#2a4365',
+            accent: '#f97316',
+            'accent-light': '#fdba74',
+            'miner-blue': '#3b82f6',
+            'miner-green': '#22c55e',
+            'miner-yellow': '#eab308',
+            'miner-purple': '#a855f7',
+            'miner-red': '#ef4444',
+            'miner-orange': '#f97316',
+            'miner-dark-green': '#15803d'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 1s ease-in',
+            'pulse-scale': 'pulseScale 0.5s ease-in-out'
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            },
+            pulseScale: {
+              '0%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.05)' },
+              '100%': { transform: 'scale(1)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-1;
+      }
+      .bg-gradient-primary {
+        @apply bg-gradient-to-br from-primary to-secondary;
+      }
+      .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent-light;
+      }
+      .bg-gradient-red {
+        @apply bg-gradient-to-r from-red-500 to-orange-500;
+      }
+      .input-focus {
+        @apply focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all;
+      }
+      .shadow-soft {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen relative">
+  <!-- 公众号信息 -->
+  <div class="fixed top-4 right-4 bg-gradient-red text-white px-4 py-2 rounded-full text-sm font-bold shadow-md z-50 animate-fade-in">
+    官方公众号：星火游戏社
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-primary text-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex items-center space-x-3">
+          <i class="fa fa-fire text-accent text-2xl animate-pulse-slow"></i>
+          <h1 class="text-2xl md:text-3xl font-bold text-shadow">矿工星火助手</h1>
+        </a>
+      </div>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="hover:text-accent transition-colors">首页</a>
+        <a href="#" class="hover:text-accent transition-colors">帮助</a>
+        <a href="#" class="hover:text-accent transition-colors">设置</a>
+        <div class="flex items items-center space-x-2">
+          <i class="fa fa-user-circle text-xl"></i>
+          <span>矿工账号</span>
+        </div>
+      </div>
+      <button class="md:hidden text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+  
+  <!-- 主要内容 -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <section class="mb-8 animate-fade-in">
+      <div class="flex items-center">
+        <a href="index.html" class="mr-4 text-primary hover:text-accent transition-colors">
+          <i class="fa fa-arrow-left text-xl"></i>
+        </a>
+        <div>
+          <h2 class="text-3xl font-bold text-primary">养猪</h2>
+          <p class="text-gray-600 mt-2">输入不同阶段的猪数量，计算养猪收益和利润</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 计算器卡片 -->
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto border-t-4 border-accent">
+      <!-- 输入区域 -->
+      <div class="mb-8 bg-gradient-to-r from-primary/5 to-secondary/5 p-5 rounded-lg">
+        <h3 class="text-lg font-semibold mb-4 flex items-center text-primary">
+          <i class="fa fa-calculator text-accent mr-2"></i>
+          猪数量输入
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 幼崽期 -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-600">幼崽期</label>
+            <input type="number" id="piglet" min="0" value="0" 
+                  class="w-full px-3 py-3 border-2 border-gray-200 rounded-lg input-focus bg-white hover:border-accent/50 transition-all shadow-sm"
+                  placeholder="请输入幼崽期猪的数量">
+          </div>
+          
+          <!-- 仔猪期 -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">仔猪期</label>
+            <input type="number" id="weaned" min="0" value="0"
+                  class="w-full px-3 py-3 border-2 border-gray-200 rounded-lg input-focus bg-white hover:border-accent/50 transition-all shadow-sm"
+                  placeholder="请输入仔猪期猪的数量">
+          </div>
+          
+          <!-- 保育期 -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">保育期</label>
+            <input type="number" id="nursery" min="0" value="0"
+                  class="w-full px-3 py-3 border-2 border-gray-200 rounded-lg input-focus bg-white hover:border-accent/50 transition-all shadow-sm"
+                  placeholder="请输入保育期猪的数量">
+          </div>
+          
+          <!-- 生长期 -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">生长期</label>
+            <input type="number" id="growing" min="0" value="0"
+                  class="w-full px-3 py-3 border-2 border-gray-200 rounded-lg input-focus bg-white hover:border-accent/50 transition-all shadow-sm"
+                  placeholder="请输入生长期猪的数量">
+          </div>
+          
+          <!-- 育成期 -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">育成期</label>
+            <input type="number" id="finishing" min="0" value="0"
+                  class="w-full px-3 py-3 border-2 border-gray-200 rounded-lg input-focus bg-white hover:border-accent/50 transition-all shadow-sm"
+                  placeholder="请输入育成期猪的数量">
+          </div>
+          
+          <!-- 出栏期 -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">出栏期</label>
+            <input type="number" id="market" min="0" value="0"
+                  class="w-full px-3 py-3 border-2 border-gray-200 rounded-lg input-focus bg-white hover:border-accent/50 transition-all shadow-sm"
+                  placeholder="请输入出栏期猪的数量">
+          </div>
+        </div>
+      </div>
+      
+      <!-- 计算结果 -->
+      
+      <!-- 计算结果 -->
+      <div class="result-section" id="resultSection" style="display: none;">
+        <h3 class="text-lg font-semibold mb-4 flex items-center text-primary">
+          <i class="fa fa-bar-chart text-accent mr-2"></i>
+          计算结果
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 总成本 -->
+          <div class="bg-gradient-to-r from-miner-blue/10 to-primary/10 p-5 rounded-lg card-hover shadow-md border border-miner-blue/20">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-700">总成本</span>
+              <span id="totalCost" class="text-lg font-bold text-primary">--</span>
+            </div>
+          </div>
+          
+          <!-- 总产出 -->
+          <div class="bg-gradient-to-r from-miner-green/10 to-miner-blue/10 p-5 rounded-lg card-hover shadow-md border border-miner-green/20">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">总产出</span>
+              <span id="totalOutput" class="text-lg font-bold text-primary">--</span>
+            </div>
+          </div>
+          
+          <!-- 总利润 -->
+          <div class="bg-gradient-to-r from-miner-orange/10 to-miner-yellow/10 p-5 rounded-lg card-hover shadow-md border border-miner-orange/20">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">总利润</span>
+              <span id="totalProfit" class="text-lg font-bold text-success">--</span>
+            </div>
+          </div>
+          
+          <!-- 利润率 -->
+          <div class="bg-gradient-to-r from-miner-purple/10 to-miner-red/10 p-5 rounded-lg card-hover shadow-md border border-miner-purple/20">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">利润率</span>
+              <span id="profitRate" class="text-lg font-bold text-primary">--</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 每日利润明细 -->
+        <div class="mt-8">
+          <h4 class="text-md font-semibold mb-3 flex items-center">
+            <i class="fa fa-calendar text-info mr-2"></i>
+            每日利润明细
+          </h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- 幼崽期每日利润 -->
+          <div class="bg-white p-4 rounded-lg text-sm border border-miner-blue/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">幼崽期每日利润</span>
+                <span id="pigletDailyProfit" class="font-medium text-success">--</span>
+              </div>
+            </div>
+            
+            <!-- 仔猪期每日利润 -->
+          <div class="bg-white p-4 rounded-lg text-sm border border-miner-green/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">仔猪期每日利润</span>
+                <span id="weanedDailyProfit" class="font-medium text-success">--</span>
+              </div>
+            </div>
+            
+            <!-- 保育期每日利润 -->
+          <div class="bg-white p-4 rounded-lg text-sm border border-miner-yellow/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">保育期每日利润</span>
+                <span id="nurseryDailyProfit" class="font-medium text-success">--</span>
+              </div>
+            </div>
+            
+            <!-- 生长期每日利润 -->
+          <div class="bg-white p-4 rounded-lg text-sm border border-miner-orange/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">生长期每日利润</span>
+                <span id="growingDailyProfit" class="font-medium text-success">--</span>
+              </div>
+            </div>
+            
+            <!-- 育成期每日利润 -->
+          <div class="bg-white p-4 rounded-lg text-sm border border-miner-red/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">育成期每日利润</span>
+                <span id="finishingDailyProfit" class="font-medium text-success">--</span>
+              </div>
+            </div>
+            
+            <!-- 出栏期每日利润 -->
+          <div class="bg-white p-4 rounded-lg text-sm border border-miner-purple/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">出栏期每日利润</span>
+                <span id="marketDailyProfit" class="font-medium text-success">--</span>
+              </div>
+            </div>
+            
+            <!-- 每日总利润 -->
+            <div class="bg-gradient-to-r from-white to-miner-blue/10 p-4 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow transform hover:scale-105 duration-300">
+              <div class="flex justify-between">
+                <span class="text-gray-700">每日总利润</span>
+                <span id="dailyTotalProfit" class="font-bold text-miner-blue">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 每日饲料消耗明细 -->
+        <div class="mt-8">
+          <h4 class="text-md font-semibold mb-3 flex items-center">
+            <i class="fa fa-cutlery text-miner-orange mr-2"></i>
+            每日饲料消耗
+          </h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <!-- 幼崽期每日饲料消耗 -->
+            <div class="bg-white p-4 rounded-lg text-sm border border-miner-blue/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">幼崽期每日消耗</span>
+                <span id="pigletDailyConsumption" class="font-medium text-gray-900">--</span>
+              </div>
+            </div>
+            
+            <!-- 仔猪期每日饲料消耗 -->
+            <div class="bg-white p-4 rounded-lg text-sm border border-miner-green/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">仔猪期每日消耗</span>
+                <span id="weanedDailyConsumption" class="font-medium text-gray-900">--</span>
+              </div>
+            </div>
+            
+            <!-- 保育期每日饲料消耗 -->
+            <div class="bg-white p-4 rounded-lg text-sm border border-miner-yellow/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">保育期每日消耗</span>
+                <span id="nurseryDailyConsumption" class="font-medium text-gray-900">--</span>
+              </div>
+            </div>
+            
+            <!-- 生长期每日饲料消耗 -->
+            <div class="bg-white p-4 rounded-lg text-sm border border-miner-orange/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">生长期每日消耗</span>
+                <span id="growingDailyConsumption" class="font-medium text-gray-900">--</span>
+              </div>
+            </div>
+            
+            <!-- 育成期每日饲料消耗 -->
+            <div class="bg-white p-4 rounded-lg text-sm border border-miner-red/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">育成期每日消耗</span>
+                <span id="finishingDailyConsumption" class="font-medium text-gray-900">--</span>
+              </div>
+            </div>
+            
+            <!-- 出栏期每日饲料消耗 -->
+            <div class="bg-white p-4 rounded-lg text-sm border border-miner-purple/20 shadow-md hover:shadow-lg transition-shadow">
+              <div class="flex justify-between">
+                <span class="text-gray-600">出栏期每日消耗</span>
+                <span id="marketDailyConsumption" class="font-medium text-gray-900">--</span>
+              </div>
+            </div>
+            
+            <!-- 每日总饲料消耗 -->
+            <div class="bg-gradient-to-r from-white to-miner-orange/10 p-4 rounded-lg text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow transform hover:scale-105 duration-300">
+              <div class="flex justify-between">
+                <span class="text-gray-700">每日总消耗</span>
+                <span id="dailyTotalConsumption" class="font-bold text-miner-orange">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 说明部分 -->
+    <div class="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto mt-8 border-t-4 border-miner-blue">
+      <h3 class="text-lg font-semibold mb-4 flex items-center text-primary">
+        <i class="fa fa-info-circle text-miner-blue mr-2"></i>
+        使用说明
+      </h3>
+      
+      <div class="text-gray-700 space-y-3">
+        <p>1. 请在对应输入框中输入各阶段猪的数量，只能输入非负整数。</p>
+        <p>2. 不同阶段的饲料产出率（每十分钟）：</p>
+        <ul class="list-disc pl-5 space-y-1 text-gray-700">
+          <li>幼崽期：0.035</li>
+          <li>仔猪期：0.045</li>
+          <li>保育期：0.052</li>
+          <li>生长期：0.059</li>
+          <li>育成期：0.066</li>
+          <li>出栏期：0.073</li>
+        </ul>
+        <p>3. 不同阶段的饲料消耗率（每小时）：</p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>幼崽期：0.167</li>
+          <li>仔猪期：0.208</li>
+          <li>保育期：0.25</li>
+          <li>生长期：0.291</li>
+          <li>育成期：0.333</li>
+          <li>出栏期：0.375</li>
+        </ul>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-primary text-white py-6 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-lg font-bold flex items-center">
+            <i class="fa fa-star text-accent mr-2"></i> 矿工星火助手
+          </h3>
+          <p class="text-sm opacity-75 mt-1">您的一站式矿工辅助平台</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-question-circle"></i> 帮助中心
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-book"></i> 使用手册
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-envelope"></i> 联系我们
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-4 pt-4 text-center text-sm opacity-75">
+        <p>© 2025 矿工星火助手 版权所有</p>
+        
+      </div>
+    </div>
+  </footer>
+  
+  <!-- JavaScript -->
+  <script>
+    // 页面加载完成后的动画效果
+    document.addEventListener('DOMContentLoaded', function() {
+      // 添加页面元素动画效果
+      const sections = document.querySelectorAll('section, .bg-white');
+      
+      sections.forEach((section, index) => {
+        // 初始设置透明度和位置
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        
+        // 添加延迟动画
+        setTimeout(() => {
+          section.style.opacity = '1';
+          section.style.transform = 'translateY(0)';
+        }, 100 * index);
+      });
+      // 定义不同阶段的饲料产出率（每十分钟）
+      const feedOutputRates = [0.035, 0.045, 0.052, 0.059, 0.066, 0.073];
+      
+      // 定义不同阶段的饲料消耗率（每小时）
+      const feedConsumptionRates = [0.167, 0.208, 0.25, 0.291, 0.333, 0.375];
+      
+      // 获取所有输入框
+      const pigletInput = document.getElementById('piglet');
+      const weanedInput = document.getElementById('weaned');
+      const nurseryInput = document.getElementById('nursery');
+      const growingInput = document.getElementById('growing');
+      const finishingInput = document.getElementById('finishing');
+      const marketInput = document.getElementById('market');
+      
+      // 获取计算按钮
+      const calculateBtn = document.getElementById('calculateBtn');
+      
+      // 获取结果显示元素
+      const resultSection = document.getElementById('resultSection');
+      const totalCostElement = document.getElementById('totalCost');
+      const totalOutputElement = document.getElementById('totalOutput');
+      const totalProfitElement = document.getElementById('totalProfit');
+      const profitRateElement = document.getElementById('profitRate');
+      
+      // 获取每日利润显示元素
+      const dailyProfitElements = [
+        document.getElementById('pigletDailyProfit'),
+        document.getElementById('weanedDailyProfit'),
+        document.getElementById('nurseryDailyProfit'),
+        document.getElementById('growingDailyProfit'),
+        document.getElementById('finishingDailyProfit'),
+        document.getElementById('marketDailyProfit')
+      ];
+      
+      // 获取每日饲料消耗显示元素
+      const dailyConsumptionElements = [
+        document.getElementById('pigletDailyConsumption'),
+        document.getElementById('weanedDailyConsumption'),
+        document.getElementById('nurseryDailyConsumption'),
+        document.getElementById('growingDailyConsumption'),
+        document.getElementById('finishingDailyConsumption'),
+        document.getElementById('marketDailyConsumption')
+      ];
+      
+      // 验证输入：只能输入非负整数
+      function validateInput(inputElement) {
+        inputElement.addEventListener('input', function() {
+          // 移除非数字字符（保留空字符串）
+          this.value = this.value.replace(/[^0-9]/g, '');
+          
+          // 如果输入为空，设置为0
+          if (this.value === '') {
+            this.value = '0';
+          }
+        });
+      }
+      
+      // 对所有输入框应用验证
+      [pigletInput, weanedInput, nurseryInput, growingInput, finishingInput, marketInput].forEach(validateInput);
+      
+      // 计算函数
+      function calculate() {
+        // 获取各阶段猪的数量
+        const pigCounts = [
+          parseInt(pigletInput.value) || 0,
+          parseInt(weanedInput.value) || 0,
+          parseInt(nurseryInput.value) || 0,
+          parseInt(growingInput.value) || 0,
+          parseInt(finishingInput.value) || 0,
+          parseInt(marketInput.value) || 0
+        ];
+        
+        // 计算总成本
+        const totalCost = pigCounts.reduce((sum, count) => sum + count, 0);
+        
+        // 计算总产出
+        const totalOutput = 256.32 * totalCost / 100;
+        
+        // 计算总利润
+        const totalProfit = totalOutput - totalCost;
+        
+        // 利润率计算：总利润/总成本/100
+        const profitRate = totalCost > 0 ? (totalProfit / totalCost / 100) : 0;
+        
+        // 计算每日利润明细和饲料消耗
+        const dailyProfits = [];
+        const dailyConsumptions = [];
+        
+        pigCounts.forEach((count, index) => {
+          // 每日饲料产出 = 每十分钟产出 * 每小时6个十分钟 * 24小时
+          const dailyOutput = feedOutputRates[index] * 6 * 24;
+          
+          // 每日饲料消耗 = 每小时消耗 * 24小时
+          const dailyConsumption = feedConsumptionRates[index] * 24;
+          
+          // 每日利润 = (产出 - 消耗) * 数量
+          dailyProfits.push((dailyOutput - dailyConsumption) * count);
+          
+          // 每日饲料消耗 = 每小时消耗 * 24小时 * 数量
+          dailyConsumptions.push(dailyConsumption * count);
+        });
+        
+        // 显示结果
+        resultSection.style.display = 'block';
+        
+        // 添加计算结果的动画效果
+        const resultCards = resultSection.querySelectorAll('div[class*="bg-gradient-"]');
+        resultCards.forEach(card => {
+          card.classList.add('animate-pulse-scale');
+          setTimeout(() => {
+            card.classList.remove('animate-pulse-scale');
+          }, 500);
+        });
+        
+        totalCostElement.textContent = totalCost.toLocaleString();
+        totalOutputElement.textContent = totalOutput.toFixed(2);
+        totalProfitElement.textContent = totalProfit.toFixed(2);
+        profitRateElement.textContent = (profitRate * 100).toFixed(2) + '%';
+        profitRateElement.className = 'text-lg font-bold text-success';
+
+        
+        // 计算每日总利润和总消耗
+        const dailyTotalProfit = dailyProfits.reduce((sum, profit) => sum + profit, 0);
+        const dailyTotalConsumption = dailyConsumptions.reduce((sum, consumption) => sum + consumption, 0);
+        
+        const dailyTotalProfitElement = document.getElementById('dailyTotalProfit');
+        const dailyTotalConsumptionElement = document.getElementById('dailyTotalConsumption');
+        
+        // 显示每日利润明细
+        dailyProfits.forEach((profit, index) => {
+          dailyProfitElements[index].textContent = profit.toFixed(3);
+          // 根据利润正负调整颜色
+          if (profit < 0) {
+            dailyProfitElements[index].classList.remove('text-success');
+            dailyProfitElements[index].classList.add('text-danger');
+          } else {
+            dailyProfitElements[index].classList.remove('text-danger');
+            dailyProfitElements[index].classList.add('text-success');
+          }
+        });
+        
+        // 显示每日饲料消耗明细
+        dailyConsumptions.forEach((consumption, index) => {
+          dailyConsumptionElements[index].textContent = consumption.toFixed(3);
+        });
+        
+        // 显示每日总利润
+        dailyTotalProfitElement.textContent = dailyTotalProfit.toFixed(3);
+        
+        // 显示每日总饲料消耗
+        dailyTotalConsumptionElement.textContent = dailyTotalConsumption.toFixed(3);
+        
+        // 保持文字颜色为蓝色系，移除边框设置
+        dailyTotalProfitElement.style.color = '#2563eb';
+        
+        // 根据总利润正负调整颜色
+        if (totalProfit < 0) {
+          totalProfitElement.classList.remove('text-success');
+          totalProfitElement.classList.add('text-danger');
+        } else {
+          totalProfitElement.classList.remove('text-danger');
+          totalProfitElement.classList.add('text-success');
+        }
+      }
+      
+      // 为所有输入框添加输入事件监听器，实现自动计算
+      [pigletInput, weanedInput, nurseryInput, growingInput, finishingInput, marketInput].forEach(input => {
+        input.addEventListener('input', calculate);
+      });
+      
+      // 初始计算一次
+      calculate();
+    });
+  </script>
+</body>
+</html>

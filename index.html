@@ -139,6 +139,16 @@
     .modal-button:hover {
       background-color: #ea580c;
     }
+    
+    /* 炼丹炉动画 */
+    @keyframes flame {
+      0%, 100% { opacity: 0.8; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+    
+    .flame {
+      animation: flame 1.5s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen">
@@ -154,9 +164,10 @@
       <p class="modal-message" id="announcementMessage">
         欢迎使用矿工星火助手！<br><br>
         最新更新：<br>
-        1. 新增魔族矿山计算器<br>
-        2. 新增八卦阵法图数据统计功能<br>
-        3. 优化页面响应式布局<br><br>
+        1. 新增养猪板块计算器<br>
+        2. 新增锻造室板块策略<br>
+        3. 优化页面响应式布局<br>
+        4. 新增炼丹炉功能模块图标<br><br>
         更多功能正在开发中，敬请期待！
       </p>
       <button class="modal-button bg-red-600 hover:bg-red-700" onclick="closeAnnouncementModal()">我知道了</button>
@@ -191,7 +202,7 @@
       <div class="bg-gradient-primary text-white p-6 md:p-10 relative z-10 flex flex-col items-center text-center">
         <h2 class="text-2xl md:text-4xl font-bold mb-4">欢迎使用矿工星火助手</h2>
         <p class="text-lg md:text-xl opacity-90 max-w-2xl mb-8">您的一站式矿工辅助平台，点击下方模块图标，快速进入相应功能页面。</p>
-    	<p class="text-lg md:text-xl opacity-90 max-w-2xl mb-8">目前可使用功能：魔族、阵法图、八卦阵法图。</p>
+    	<p class="text-lg md:text-xl opacity-90 max-w-2xl mb-8">目前可使用功能：养猪、魔族、阵法图、八卦阵法图、锻造室。</p>
 
         
         <!-- 最新公告按钮 -->
@@ -229,12 +240,12 @@
         </div>
         
         <!-- 养猪 -->
-        <div class="bg-white rounded-xl shadow-md p-4 text-center card-hover cursor-pointer" onclick="showUnderDevelopmentAlert('养猪')">
+        <a href="pig-farming-calculator.html" class="bg-white rounded-xl shadow-md p-4 text-center transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-1 inline-block w-full" style="cursor: pointer; position: relative; z-index: 10;">
           <div class="bg-green-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3">
             <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/754dfd1490fb444a836fcb7ad54728e3~tplv-a9rns2rl98-image.image?rcl=20251025162110FE780068D6AD6CE054CD&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763972481&x-signature=EmZsWASD1wOykjKjuDHuWOzU0lg%3D" alt="养猪" class="w-10 h-10">
           </div>
           <h3 class="font-medium text-gray-800">养猪</h3>
-        </div>
+        </a>
         
         <!-- 金币矿山 -->
         <div class="bg-white rounded-xl shadow-md p-4 text-center card-hover cursor-pointer" onclick="showUnderDevelopmentAlert('金币矿山')">
@@ -283,11 +294,34 @@
         </div>
         
         <!-- 锻造室 -->
-        <div class="bg-white rounded-xl shadow-md p-4 text-center card-hover cursor-pointer" onclick="showUnderDevelopmentAlert('锻造室')">
-          <div class="bg-orange-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3">
-            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c404196ff8b24461a65cd0c2addae13b~tplv-a9rns2rl98-image.image?rcl=20251025162110FE780068D6AD6CE054CD&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763972491&x-signature=zP4dEGvURk98YHTOx%2BOd%2FOdvqKQ%3D" alt="锻造室" class="w-10 h-10">
+        <div class="bg-white rounded-xl shadow-md p-4 text-center card-hover cursor-pointer">
+          <a href="blacksmithing.html" class="block h-full">
+            <div class="bg-orange-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3">
+              <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/c404196ff8b24461a65cd0c2addae13b~tplv-a9rns2rl98-image.image?rcl=20251025162110FE780068D6AD6CE054CD&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1763972491&x-signature=zP4dEGvURk98YHTOx%2BOd%2FOdvqKQ%3D" alt="锻造室" class="w-10 h-10">
+            </div>
+            <h3 class="font-medium text-gray-800">锻造室</h3>
+          </a>
+        </div>
+        
+        <!-- 炼丹炉 -->
+        <div class="bg-white rounded-xl shadow-md p-4 text-center card-hover cursor-pointer" onclick="showUnderDevelopmentAlert('炼丹炉')">
+          <div class="bg-red-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3">
+            <div class="bg-white w-10 h-10 rounded-md flex items-center justify-center">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 丹炉主体 -->
+                <path d="M10 12H22V20C22 21.1 21.1 22 20 22H12C10.9 22 10 21.1 10 20V12Z" fill="#DC2626"/>
+                <!-- 丹炉底部 -->
+                <path d="M8 20H24V22H8V20Z" fill="#7F1D1D"/>
+                <!-- 丹炉顶部 -->
+                <path d="M14 10H18V12H14V10Z" fill="#7F1D1D"/>
+                <!-- 丹炉盖子 -->
+                <path d="M12 8H20V10H12V8Z" fill="#991B1B"/>
+                <!-- 火焰 -->
+                <path class="flame" d="M16 6C16 6 18 8 18 10C18 12 16 14 16 14C16 14 14 12 14 10C14 8 16 6 16 6Z" fill="#F97316"/>
+              </svg>
+            </div>
           </div>
-          <h3 class="font-medium text-gray-800">锻造室</h3>
+          <h3 class="font-medium text-gray-800">炼丹炉</h3>
         </div>
         
         <!-- 卡牌林 -->
@@ -343,9 +377,7 @@
       </div>
       <div class="border-t border-gray-700 mt-4 pt-4 text-center text-sm opacity-75">
         <p>© 2025 矿工星火助手 版权所有</p>
-        <p class="mt-2 text-xs opacity-50">
-          <button onclick="resetAnnouncementStatus()" class="bg-transparent border-none text-blue-400 hover:text-blue-600 cursor-pointer">重置公告状态</button>
-        </p>
+        
       </div>
     </div>
   </footer>
