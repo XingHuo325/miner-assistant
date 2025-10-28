@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>合纵连横 - 矿工星火助手</title>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d',
+            secondary: '#2a4365',
+            accent: '#f97316',
+            'accent-light': '#fdba74',
+            'miner-blue': '#3b82f6',
+            'miner-green': '#22c55e',
+            'miner-yellow': '#eab308',
+            'miner-purple': '#a855f7',
+            'miner-red': '#ef4444',
+            'miner-orange': '#f97316',
+            'miner-dark-green': '#15803d'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 1s ease-in',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-1;
+      }
+      .bg-gradient-primary {
+        @apply bg-gradient-to-br from-primary to-secondary;
+      }
+      .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent-light;
+      }
+      .input-focus {
+        @apply focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <!-- 公众号信息 -->
+  <div class="fixed top-4 right-4 bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md z-50 animate-fade-in">
+    官方公众号：星火游戏社
+  </div>
+
+  <!-- 顶部导航栏 -->
+  <header class="bg-gradient-primary text-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex items-center space-x-3">
+          <i class="fa fa-fire text-accent text-2xl animate-pulse-slow"></i>
+          <h1 class="text-2xl md:text-3xl font-bold text-shadow">矿工星火助手</h1>
+        </a>
+      </div>
+      <div class="hidden md:flex items-center space-x-6">
+        <a href="index.html" class="hover:text-accent transition-colors">首页</a>
+        <a href="#" class="hover:text-accent transition-colors">帮助</a>
+        <a href="#" class="hover:text-accent transition-colors">设置</a>
+        <div class="flex items-center space-x-2">
+          <i class="fa fa-user-circle text-xl"></i>
+          <span>矿工账号</span>
+        </div>
+      </div>
+      <button class="md:hidden text-xl">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <div class="mb-8 animate-fade-in">
+      <div class="flex items-center mb-4">
+        <a href="index.html" class="text-primary mr-4">
+          <i class="fa fa-arrow-left text-xl"></i>
+        </a>
+        <h2 class="text-3xl font-bold text-primary">合纵连横（测试版）</h2>
+      </div>
+      <p class="text-gray-600 ml-9">规划不同板块间的资源分配，优化收益（总利润的A板块仅计算30天，暂时没想到好的办法替代QAQ）</p>
+      <p class="text-gray-600 ml-9">目前仅为测试版，收益计算会有些许偏差，会根据玩家反馈进行优化，有好的想法可以去公众号留言！</p>
+    </div>
+
+    <!-- 合纵连横计算表单 -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 animate-fade-in" style="animation-delay: 0.2s;">
+      <h3 class="text-xl font-semibold mb-6 text-primary">
+        <i class="fa fa-calculator text-accent mr-2"></i>
+        资源分配计算器
+      </h3>
+      
+      <div class="space-y-6">
+        <!-- 选择板块A -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="sectionA" class="block text-sm font-medium text-gray-700 mb-2">选择板块A</label>
+            <select id="sectionA" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-accent focus:border-accent sm:text-sm rounded-md bg-white border">
+                <option value="demon-mine">魔族矿</option>
+                <option value="formation-diagram">阵法图</option>
+                <option value="five-elements-beast">五行兽</option>
+                <option value="scripture-pavilion">藏经阁</option>
+                <option value="pig-farming">养猪</option>
+                <option value="alchemy-furnace">炼丹炉</option>
+              </select>
+          </div>
+          
+          <!-- 选择锻造室等级 -->
+          <div>
+            <label for="blacksmithLevel" class="block text-sm font-medium text-gray-700 mb-2">锻造室等级</label>
+            <select id="blacksmithLevel" class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-accent focus:border-accent sm:text-sm rounded-md bg-white border">
+                <!-- 等级选项将通过JavaScript动态生成 -->
+              </select>
+          </div>
+        </div>
+        
+        <!-- 投入宝石 -->
+        <div>
+          <label for="gemInput" class="block text-sm font-medium text-gray-700 mb-2">投入宝石</label>
+          <input type="number" id="gemInput" min="1" step="1" placeholder="请输入投入的宝石数量" 
+                 class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-accent focus:border-accent sm:text-sm rounded-md">
+        </div>
+        
+        <!-- 计算结果展示 -->
+        <div class="border-t border-gray-200 pt-6">
+          <h4 class="text-lg font-medium text-gray-900 mb-4">计算结果</h4>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 左侧结果 -->
+            <div class="space-y-4">
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">A的产速：</span>
+                <span id="sectionASpeed" class="font-medium text-gray-900">0</span>
+              </div>
+              
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">锻造室数量：</span>
+                <span id="blacksmithCount" class="font-medium text-gray-900">0</span>
+              </div>
+              
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">锻造每日投入：</span>
+                <span id="dailyInvestment" class="font-medium text-gray-900">0</span>
+              </div>
+            </div>
+            
+            <!-- 右侧结果 -->
+            <div class="space-y-4">
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">锻造天数：</span>
+                <span id="blacksmithDays" class="font-medium text-gray-900">0</span>
+              </div>
+              
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">锻造总投入：</span>
+                <span id="totalInvestment" class="font-medium text-gray-900">0</span>
+              </div>
+              
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg border-l-4 border-green-500">
+                <span class="text-gray-700 font-medium">总利润：</span>
+                <span id="totalProfit" class="font-bold text-green-600">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 说明部分 -->
+    <div class="bg-white rounded-lg shadow-md p-6 border-t-4 border-blue-500 animate-fade-in" style="animation-delay: 0.4s;">
+      <h3 class="text-lg font-semibold mb-4 flex items-center text-primary">
+        <i class="fa fa-info-circle text-blue-500 mr-2"></i>
+        使用说明
+      </h3>
+      
+      <div class="text-gray-700 space-y-3">
+        <p>1. 选择要计算的板块A和锻造室等级</p>
+        <p>2. 输入要投入的宝石数量</p>
+        <p>3. 系统将自动计算A板块的产速、需要的锻造室数量、锻造投入和总利润，若产速低于每日投入会显示0</p>
+        <p>4. A板块产速计算方式：</p>
+        <ul class="list-disc pl-6 space-y-1">
+          <li>魔族矿：投入宝石 * 1.33 / 30</li>
+          <li>阵法图：投入宝石 * 1.34 / 30</li>
+          <li>五行兽：投入宝石 * 1.42 / 40</li>
+          <li>藏经阁：投入宝石 * 1.5 / 50</li>
+          <li>养猪：投入宝石 * 2.56 / 180</li>
+          <li>炼丹炉：投入宝石 * 1.48 / 49</li>
+        </ul>
+        <p>5. 总利润计算方式：A板块收益（目前仅计算30天的） + 锻造室总收入 - 锻造室总投入</p>
+        <ul class="list-disc pl-6 space-y-1">
+          <li>魔族矿收益：投入宝石 * 1.33</li>
+          <li>阵法图收益：投入宝石 * 1.34</li>
+          <li>五行兽收益：投入宝石 * 1.32</li>
+          <li>藏经阁收益：投入宝石 * 1.35</li>
+          <li>养猪收益：投入宝石 * 1.3</li>
+          <li>炼丹炉收益：投入宝石 * 1.33</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-primary text-white py-6 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <h3 class="text-lg font-bold flex items-center">
+            <i class="fa fa-star text-accent mr-2"></i> 矿工星火助手
+          </h3>
+          <p class="text-sm opacity-75 mt-1">您的一站式矿工辅助平台</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-question-circle"></i> 帮助中心
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-book"></i> 使用手册
+          </a>
+          <a href="#" class="hover:text-accent transition-colors">
+            <i class="fa fa-envelope"></i> 联系我们
+          </a>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-4 pt-4 text-center text-sm opacity-75">
+        <p>© 2025 矿工星火助手 版权所有</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 简单的提示框函数 -->
+  <script>
+    function showAlert(message) {
+      if (!document.getElementById('alertModal')) {
+        // 创建提示框元素
+        const modalHTML = `
+          <div id="alertModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div class="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm"></div>
+            <div class="relative bg-white rounded-lg shadow-lg p-6 max-w-md w-full mx-auto transform transition-all">
+              <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-amber-100 mb-4">
+                  <i class="fa fa-exclamation-triangle text-amber-500 text-xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">提示</h3>
+                <div class="text-gray-500 mb-5" id="alertMessage">${message}</div>
+                <button id="alertClose" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-accent text-base font-medium text-white hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors">
+                  确定
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // 添加关闭事件
+        document.getElementById('alertClose').addEventListener('click', function() {
+          document.getElementById('alertModal').remove();
+        });
+      } else {
+        // 更新现有提示框的消息
+        document.getElementById('alertMessage').textContent = message;
+      }
+    }
+  </script>
+
+  <script>
+    // 锻造室数据
+    const blacksmithingData = [
+      { level: 1, cost: 5, room: '初级', dailyInvestment: 10, days: 5, totalInvestment: 50, totalIncome: 53, profit: 3, profitRate: 0.06, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 2, cost: 10, room: '中级', dailyInvestment: 20, days: 10, totalInvestment: 200, totalIncome: 224, profit: 24, profitRate: 0.12, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 3, cost: 15, room: '高级', dailyInvestment: 50, days: 15, totalInvestment: 750, totalIncome: 885, profit: 135, profitRate: 0.18, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 4, cost: 20, room: '特级', dailyInvestment: 100, days: 20, totalInvestment: 2000, totalIncome: 2480, profit: 480, profitRate: 0.24, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 5, cost: 25, room: '顶级', dailyInvestment: 150, days: 25, totalInvestment: 3750, totalIncome: 4875, profit: 1125, profitRate: 0.3, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 6, cost: 30, room: '王级', dailyInvestment: 200, days: 30, totalInvestment: 6000, totalIncome: 8160, profit: 2160, profitRate: 0.36, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 7, cost: 35, room: '皇级', dailyInvestment: 250, days: 35, totalInvestment: 8750, totalIncome: 12425, profit: 3675, profitRate: 0.42, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 8, cost: 40, room: '神级', dailyInvestment: 300, days: 40, totalInvestment: 12000, totalIncome: 17760, profit: 5760, profitRate: 0.48, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 9, cost: 45, room: '仙级', dailyInvestment: 350, days: 45, totalInvestment: 15750, totalIncome: 24255, profit: 8505, profitRate: 0.54, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 10, cost: 50, room: '魔级', dailyInvestment: 400, days: 50, totalInvestment: 20000, totalIncome: 32000, profit: 12000, profitRate: 0.6, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 11, cost: 55, room: '天地', dailyInvestment: 450, days: 55, totalInvestment: 24750, totalIncome: 41085, profit: 16335, profitRate: 0.66, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 12, cost: 60, room: '九霄', dailyInvestment: 500, days: 60, totalInvestment: 30000, totalIncome: 51600, profit: 21600, profitRate: 0.72, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 13, cost: 65, room: '混沌', dailyInvestment: 550, days: 65, totalInvestment: 35750, totalIncome: 63635, profit: 27885, profitRate: 0.78, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 14, cost: 70, room: '鸿蒙', dailyInvestment: 600, days: 70, totalInvestment: 42000, totalIncome: 77280, profit: 35280, profitRate: 0.84, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 15, cost: 75, room: '造化', dailyInvestment: 700, days: 75, totalInvestment: 52500, totalIncome: 99750, profit: 47250, profitRate: 0.9, dailyRate: '1.20%', monthlyRate: '36.00%' },
+      { level: 16, cost: 80, room: '轮回', dailyInvestment: 800, days: 80, totalInvestment: 64000, totalIncome: 125440, profit: 61440, profitRate: 0.96, dailyRate: '1.20%', monthlyRate: '36.00%' }
+    ];
+    
+    // 板块A数据
+    const sectionAData = {
+      'demon-mine': { name: '魔族矿', speedMultiplier: 1.33, divisor: 30, profitMultiplier: 1.33 },
+      'formation-diagram': { name: '阵法图', speedMultiplier: 1.34, divisor: 30, profitMultiplier: 1.34 },
+      'five-elements-beast': { name: '五行兽', speedMultiplier: 1.42, divisor: 40, profitMultiplier: 1.32 },
+      'scripture-pavilion': { name: '藏经阁', speedMultiplier: 1.5, divisor: 50, profitMultiplier: 1.35 },
+      'pig-farming': { name: '养猪', speedMultiplier: 2.56, divisor: 180, profitMultiplier: 1.3 },
+      'alchemy-furnace': { name: '炼丹炉', speedMultiplier: 1.48, divisor: 49, profitMultiplier: 1.33 }
+    };
+    
+    // 简单的延迟执行函数
+    function delayExecute(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func(...args);
+        }, wait);
+        return timeout;
+      };
+    }
+    
+    // 保存宝石输入的超时ID
+    let gemInputTimeout = null;
+    
+    // 初始化锻造室等级下拉框
+      function initBlacksmithLevelSelect() {
+        const select = document.getElementById('blacksmithLevel');
+        blacksmithingData.forEach(item => {
+          const option = document.createElement('option');
+          option.value = item.level;
+          option.textContent = `等级 ${item.level} (${item.room})`;
+          select.appendChild(option);
+        });
+      }
+    
+    // 检查产速是否小于投入并显示提醒
+      function checkAndShowAlert(gemInput, sectionASpeed, blacksmithData) {
+        if (gemInput > 0 && sectionASpeed > 0 && sectionASpeed < blacksmithData.dailyInvestment) {
+          showAlert(`A的产速(${sectionASpeed.toFixed(2)})小于锻造室的每日投入(${blacksmithData.dailyInvestment})，锻造室数量设置为0。`);
+        }
+      }
+      
+      // 计算所有数据
+      function calculateAll() {
+        const sectionA = document.getElementById('sectionA').value;
+        const blacksmithLevel = parseInt(document.getElementById('blacksmithLevel').value);
+        const gemInput = parseFloat(document.getElementById('gemInput').value) || 0;
+        
+        // 获取当前板块和锻造室数据
+        const sectionData = sectionAData[sectionA];
+        const blacksmithData = blacksmithingData.find(item => item.level === blacksmithLevel) || blacksmithingData[0];
+        
+        // 计算A的产速
+        const sectionASpeed = gemInput > 0 ? (gemInput * sectionData.speedMultiplier) / sectionData.divisor : 0;
+        
+        // 计算锻造室数量 - 新逻辑：
+        // 1. 如果产速小于每日投入，则数量为0
+        // 2. 限制数量上限为16
+        let blacksmithCount = 0;
+        
+        if (sectionASpeed > 0) {
+          if (sectionASpeed < blacksmithData.dailyInvestment) {
+            // 产速小于每日投入，数量为0
+            blacksmithCount = 0;
+          } else {
+            // 正常计算数量并限制上限为16，使用Math.floor确保每个锻造室都有足够的产速支持
+            blacksmithCount = Math.min(Math.floor(sectionASpeed / blacksmithData.dailyInvestment), 16);
+          }
+        }
+        
+        // 计算锻造每日投入
+        const dailyInvestment = blacksmithCount * blacksmithData.dailyInvestment;
+        
+        // 锻造天数
+        const blacksmithDays = blacksmithData.days;
+        
+        // 锻造总投入
+        const totalInvestment = dailyInvestment * blacksmithDays;
+        
+        // 计算总利润
+        // 总利润 = A板块收益 + 锻造室总收入 - 锻造室总投入
+        const sectionAProfit = gemInput * sectionData.profitMultiplier;
+        const blacksmithTotalIncome = blacksmithData.totalIncome * blacksmithCount;
+        const totalProfit = sectionAProfit + blacksmithTotalIncome - totalInvestment;
+        
+        // 更新UI
+        document.getElementById('sectionASpeed').textContent = sectionASpeed.toFixed(2);
+        document.getElementById('blacksmithCount').textContent = blacksmithCount;
+        document.getElementById('dailyInvestment').textContent = dailyInvestment;
+        document.getElementById('blacksmithDays').textContent = blacksmithDays;
+        document.getElementById('totalInvestment').textContent = totalInvestment;
+        document.getElementById('totalProfit').textContent = totalProfit.toFixed(2);
+      }
+      
+      // 创建延迟检查函数，用于5秒后判断产速是否小于投入
+      const delayedAlertCheck = delayExecute(function() {
+        const sectionA = document.getElementById('sectionA').value;
+        const blacksmithLevel = parseInt(document.getElementById('blacksmithLevel').value);
+        const gemInput = parseFloat(document.getElementById('gemInput').value) || 0;
+        
+        const sectionData = sectionAData[sectionA];
+        const blacksmithData = blacksmithingData.find(item => item.level === blacksmithLevel) || blacksmithingData[0];
+        const sectionASpeed = gemInput > 0 ? (gemInput * sectionData.speedMultiplier) / sectionData.divisor : 0;
+        
+        checkAndShowAlert(gemInput, sectionASpeed, blacksmithData);
+      }, 5000);
+      
+    
+    // 初始化事件监听
+      function initEventListeners() {
+        // 为所有输入元素添加事件监听
+        document.getElementById('sectionA').addEventListener('change', calculateAll);
+        document.getElementById('blacksmithLevel').addEventListener('change', calculateAll);
+        document.getElementById('gemInput').addEventListener('input', function(e) {
+          // 只允许输入正整数
+          e.target.value = e.target.value.replace(/[^0-9]/g, '');
+          calculateAll();
+          
+          // 清除之前的超时任务
+          if (gemInputTimeout) {
+            clearTimeout(gemInputTimeout);
+          }
+          
+          // 设置新的延迟检查任务
+          gemInputTimeout = setTimeout(() => {
+            const sectionA = document.getElementById('sectionA').value;
+            const blacksmithLevel = parseInt(document.getElementById('blacksmithLevel').value);
+            const gemInput = parseFloat(e.target.value) || 0;
+            
+            const sectionData = sectionAData[sectionA];
+            const blacksmithData = blacksmithingData.find(item => item.level === blacksmithLevel) || blacksmithingData[0];
+            const sectionASpeed = gemInput > 0 ? (gemInput * sectionData.speedMultiplier) / sectionData.divisor : 0;
+            
+            checkAndShowAlert(gemInput, sectionASpeed, blacksmithData);
+          }, 5000);
+        });
+      }
+    
+    // 页面加载完成后初始化
+      document.addEventListener('DOMContentLoaded', function() {
+        initBlacksmithLevelSelect();
+        initEventListeners();
+        calculateAll(); // 初始计算一次
+      });
+  </script>
+</body>
+</html>
