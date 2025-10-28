@@ -1,0 +1,628 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>黑名单管理 - 矿工星火助手</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 配置 Tailwind CSS -->
+    <!-- 统一的 Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d',
+            secondary: '#2a4365',
+            accent: '#f97316',
+            'accent-light': '#fdba74',
+            'miner-blue': '#3b82f6',
+            'miner-green': '#22c55e',
+            'miner-yellow': '#eab308',
+            'miner-purple': '#a855f7',
+            'miner-red': '#ef4444',
+            'miner-orange': '#f97316',
+            'miner-dark-green': '#15803d'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 1s ease-in',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(-10px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .card-hover {
+                @apply transition-all duration-300 hover:shadow-lg hover:scale-105 hover:-translate-y-1;
+            }
+            .bg-gradient-primary {
+                @apply bg-gradient-to-br from-primary to-secondary;
+            }
+            .text-gradient {
+                @apply bg-clip-text text-transparent bg-gradient-to-r from-accent to-accent-light;
+            }
+            .input-focus {
+                @apply focus:ring-2 focus:ring-accent/50 focus:border-accent outline-none transition-all;
+            }
+            .table-primary {
+                @apply w-full border-collapse text-left;
+            }
+            .table-primary th {
+                @apply bg-gray-50 text-gray-700 font-medium py-3 px-4 border-b;
+            }
+            .table-primary td {
+                @apply py-3 px-4 border-b;
+            }
+            .table-primary tr:hover {
+                @apply bg-gray-50;
+            }
+            .btn-primary {
+                @apply bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-md transition-all duration-300 transform hover:scale-105;
+            }
+            .btn-secondary {
+                @apply bg-secondary hover:bg-secondary/90 text-white font-medium py-2 px-4 rounded-md transition-all duration-300;
+            }
+            .btn-accent {
+                @apply bg-accent hover:bg-accent-light text-white font-bold py-2 px-4 rounded-md transition-all duration-300 transform hover:scale-105;
+            }
+            .input-primary {
+                @apply w-full px-4 py-2 border border-gray-300 rounded-md input-focus;
+            }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Inter, system-ui, sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.fixed{position:fixed}.inset-0{inset:0px}.right-4{right:1rem}.top-4{top:1rem}.bottom-4{bottom:1rem}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-9{margin-left:2.25rem}.mr-2{margin-right:0.5rem}.mr-4{margin-right:1rem}.mt-1{margin-top:0.25rem}.mt-12{margin-top:3rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.block{display:block}.flex{display:flex}.hidden{display:none}.min-h-screen{min-height:100vh}.w-16{width:4rem}.w-32{width:8rem}.w-full{width:100%}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-grow{flex-grow:1}.translate-y-20{--tw-translate-y:5rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes fadeIn{0%{opacity:0;transform:translateY(-10px)}100%{opacity:1;transform:translateY(0)}}.animate-fade-in{animation:fadeIn 1s ease-in}@keyframes pulse{50%{opacity:.5}}.animate-pulse-slow{animation:pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-3 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.75rem * var(--tw-space-x-reverse));margin-left:calc(0.75rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-6 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1.5rem * var(--tw-space-x-reverse));margin-left:calc(1.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-x-auto{overflow-x:auto}.whitespace-nowrap{white-space:nowrap}.rounded{border-radius:0.25rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-t{border-top-width:1px}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-gray-700{--tw-border-opacity:1;border-color:rgb(55 65 81 / var(--tw-border-opacity, 1))}.bg-black\/50{background-color:rgb(0 0 0 / 0.5)}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-primary{--tw-bg-opacity:1;background-color:rgb(26 54 93 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-red-500{--tw-gradient-from:#ef4444 var(--tw-gradient-from-position);--tw-gradient-to:rgb(239 68 68 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-orange-500{--tw-gradient-to:#f97316 var(--tw-gradient-to-position)}.p-6{padding:1.5rem}.p-4{padding:1rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.text-accent{--tw-text-opacity:1;color:rgb(249 115 22 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-primary{--tw-text-opacity:1;color:rgb(26 54 93 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.opacity-75{opacity:0.75}.opacity-0{opacity:0}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-500{transition-duration:500ms}.ease-in-out{transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1)}.text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }.bg-gradient-primary{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops));--tw-gradient-from:#1a365d var(--tw-gradient-from-position);--tw-gradient-to:rgb(26 54 93 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to);--tw-gradient-to:#2a4365 var(--tw-gradient-to-position)}.table-primary{width:100%;border-collapse:collapse;text-align:left}.table-primary th{border-bottom-width:1px;--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1));padding-top:0.75rem;padding-bottom:0.75rem;padding-left:1rem;padding-right:1rem;font-weight:500;--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.table-primary td{border-bottom-width:1px;padding-top:0.75rem;padding-bottom:0.75rem;padding-left:1rem;padding-right:1rem}.table-primary tr:hover{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.btn-primary{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));border-radius:0.375rem;--tw-bg-opacity:1;background-color:rgb(26 54 93 / var(--tw-bg-opacity, 1));padding-top:0.5rem;padding-bottom:0.5rem;padding-left:1rem;padding-right:1rem;font-weight:700;--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1));transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:300ms}.btn-primary:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));background-color:rgb(26 54 93 / 0.9)}.btn-secondary{border-radius:0.375rem;--tw-bg-opacity:1;background-color:rgb(42 67 101 / var(--tw-bg-opacity, 1));padding-top:0.5rem;padding-bottom:0.5rem;padding-left:1rem;padding-right:1rem;font-weight:500;--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1));transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:300ms}.btn-secondary:hover{background-color:rgb(42 67 101 / 0.9)}.btn-accent{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));border-radius:0.375rem;--tw-bg-opacity:1;background-color:rgb(249 115 22 / var(--tw-bg-opacity, 1));padding-top:0.5rem;padding-bottom:0.5rem;padding-left:1rem;padding-right:1rem;font-weight:700;--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1));transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:300ms}.btn-accent:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));--tw-bg-opacity:1;background-color:rgb(253 186 116 / var(--tw-bg-opacity, 1))}.input-primary{width:100%;border-radius:0.375rem;border-width:1px;--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1));padding-left:1rem;padding-right:1rem;padding-top:0.5rem;padding-bottom:0.5rem;outline:2px solid transparent;outline-offset:2px;transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.input-primary:focus{--tw-border-opacity:1;border-color:rgb(249 115 22 / var(--tw-border-opacity, 1));--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);--tw-ring-color:rgb(249 115 22 / 0.5)}
+        .hover\:bg-gray-50:hover{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}
+        .hover\:text-accent:hover{--tw-text-opacity:1;color:rgb(249 115 22 / var(--tw-text-opacity, 1))}
+        .hover\:text-red-800:hover{--tw-text-opacity:1;color:rgb(153 27 27 / var(--tw-text-opacity, 1))}
+        .disabled\:cursor-not-allowed:disabled{cursor:not-allowed}
+        .disabled\:opacity-50:disabled{opacity:0.5}
+        @media (min-width: 768px){.md\:mb-0{margin-bottom:0px}.md\:flex{display:flex}.md\:hidden{display:none}.md\:flex-row{flex-direction:row}.md\:space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.md\:space-y-0 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0px * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0px * var(--tw-space-y-reverse))}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}}
+    </style></head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- 导航栏 -->
+    <!-- 公众号信息 -->
+    <div class="fixed top-4 right-4 bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md z-50 animate-fade-in">
+        官方公众号：星火游戏社
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <header class="bg-gradient-primary text-white shadow-md">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="flex items-center space-x-3">
+                    <i class="fa fa-fire text-accent text-2xl animate-pulse-slow"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold text-shadow">矿工星火助手</h1>
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="index.html" class="hover:text-accent transition-colors">首页</a>
+                <a href="#" class="hover:text-accent transition-colors">帮助</a>
+                <a href="#" class="hover:text-accent transition-colors">设置</a>
+                <div class="flex items-center space-x-2">
+                    <i class="fa fa-user-circle text-xl"></i>
+                    <span>矿工账号</span>
+                </div>
+            </div>
+            <button class="md:hidden text-xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主体内容 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 页面标题 -->
+        <div class="mb-8 animate-fade-in">
+            <div class="flex items-center mb-4">
+                <a href="index.html" class="text-primary mr-4">
+                    <i class="fa fa-arrow-left text-xl"></i>
+                </a>
+                <h2 class="text-3xl font-bold text-primary">黑名单</h2>
+            </div>
+            <p class="text-gray-600 ml-9">查看已被列入黑名单的用户,该名单为矿工小能手骗子ID名单，交易时可先查询是否疑似骗子，若存在，不代表不可交易，只是需要谨慎再谨慎！！！</p>
+        </div>
+
+        <!-- 黑名单表格 -->
+        <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-3">黑名单列表</h2>
+                <div class="flex items-center space-x-3">
+                    <input type="text" id="searchInput" placeholder="搜索ID..." class="input-primary w-full max-w-xl">
+                    <button class="btn-accent flex items-center justify-center whitespace-nowrap">
+                        <i class="fa fa-search mr-2"></i> 搜索
+                    </button>
+                    <!-- 编辑表格按钮已移除 -->
+                </div>
+            </div>
+
+            <!-- 表格区域 -->
+            <div class="overflow-x-auto">
+                <table class="table-primary">
+                    <thead>
+                        <tr>
+                            <th class="w-16">序号</th>
+                            <th>ID</th>
+                            <th class="w-32 text-center">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="blacklistTableBody">
+                        <!-- 表格数据将通过JavaScript动态生成 -->
+                        <!-- 这里添加一些示例数据 -->
+                        
+                        
+                        
+                    <tr>
+                <td>1</td>
+                <td>147802</td>
+                <td class="text-center">
+                    <button class="text-red-600 hover:text-red-800 transition-colors" onclick="removeFromBlacklist(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr><tr>
+                <td>2</td>
+                <td>262089</td>
+                <td class="text-center">
+                    <button class="text-red-600 hover:text-red-800 transition-colors" onclick="removeFromBlacklist(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            </tr></tbody>
+                </table>
+            </div>
+
+            <!-- 分页控制 -->
+            <div class="flex justify-between items-center mt-6">
+                <div class="text-gray-600">显示 1-2 条，共 2 条</div>
+                <div class="flex space-x-2">
+                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled="">
+                        <i class="fa fa-chevron-left"></i>
+                    </button>
+                    <button class="px-3 py-1 rounded bg-primary text-white">1</button>
+                    <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled="">
+                        <i class="fa fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 添加黑名单 -->
+        <section class="bg-white rounded-xl shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">添加到黑名单（仅管理员操作）</h2>
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                <input type="text" id="addIdInput" placeholder="输入要添加的ID..." class="input-primary flex-grow">
+                <button id="addBlacklistBtn" class="btn-accent">
+                    <i class="fa fa-plus mr-2"></i> 添加
+                </button>
+                <button id="saveBlacklistBtn" class="btn-primary">
+                    <i class="fa fa-save mr-2"></i> 保存
+                </button>
+            </div>
+        </section>
+        
+        <!-- 密码验证模态框 -->
+        <div id="passwordModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6 animate-fade-in">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">密码验证</h3>
+                <p id="passwordModalMessage" class="text-gray-600 mb-4">请输入密码以移除  从黑名单中:</p>
+                <div class="mb-4">
+                    <label for="passwordInput" class="block text-sm font-medium text-gray-700 mb-1">密码</label>
+                    <input type="password" id="passwordInput" class="input-primary" placeholder="请输入密码">
+                    <p id="passwordError" class="text-red-600 text-sm mt-1 hidden">密码错误，请重试</p>
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button id="cancelPasswordBtn" class="btn-secondary">取消</button>
+                    <button id="confirmPasswordBtn" class="btn-accent">确认</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 编辑控制区域已移除 -->
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-primary text-white py-6 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <h3 class="text-lg font-bold flex items-center">
+                        <i class="fa fa-star text-accent mr-2"></i> 矿工星火助手
+                    </h3>
+                    <p class="text-sm opacity-75 mt-1">您的一站式矿工辅助平台</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fa fa-question-circle"></i> 帮助中心
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fa fa-book"></i> 使用手册
+                    </a>
+                    <a href="#" class="hover:text-accent transition-colors">
+                        <i class="fa fa-envelope"></i> 联系我们
+                    </a>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-4 pt-4 text-center text-sm opacity-75">
+                <p>© 2025 矿工星火助手 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 功能 -->
+    <script>
+        // 全局变量和DOM元素
+        const ADMIN_PASSWORD = 'ACQWER';
+        let currentDeleteRow = null;
+        
+        // DOM元素
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const passwordError = document.getElementById('passwordError');
+        const passwordModalMessage = document.getElementById('passwordModalMessage');
+        const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+        const confirmPasswordBtn = document.getElementById('confirmPasswordBtn');
+        
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 搜索功能
+            document.getElementById('searchInput').addEventListener('input', function() {
+                filterBlacklist(this.value);
+            });
+            
+            // 添加黑名单事件监听 - 先弹出密码验证
+            document.getElementById('addBlacklistBtn').addEventListener('click', function() {
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+                passwordModalMessage.textContent = '请输入密码以添加到黑名单';
+                passwordModal.classList.remove('hidden');
+                passwordInput.focus();
+            });
+            
+            // 保存按钮事件监听
+            document.getElementById('saveBlacklistBtn').addEventListener('click', function() {
+                updateSourceCodeAndProvideDownload();
+                showNotification('文件已开始下载', 'success');
+            });
+            
+            // 取消密码验证
+            cancelPasswordBtn.addEventListener('click', function() {
+                // 隐藏模态框
+                passwordModal.classList.add('hidden');
+                
+                // 重置输入框、错误信息和当前行
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+                currentDeleteRow = null;
+            });
+            
+            // 确认密码验证 - 唯一的事件处理函数
+            confirmPasswordBtn.addEventListener('click', function() {
+                const password = passwordInput.value;
+                
+                // 验证密码
+                if (password === ADMIN_PASSWORD) {
+                    // 隐藏模态框
+                    passwordModal.classList.add('hidden');
+                    
+                    // 检查是否是移除操作
+                    if (currentDeleteRow) {
+                        // 移除行
+                        if (currentDeleteRow.parentNode) {
+                            currentDeleteRow.parentNode.removeChild(currentDeleteRow);
+                            
+                            // 更新序号
+                            updateSerialNumbers();
+                            
+                            // 更新分页信息
+                            updatePaginationInfo(document.getElementById('blacklistTableBody').getElementsByTagName('tr').length);
+                            
+                            // 显示成功消息
+                            showNotification('已成功从黑名单中移除', 'success');
+                        } else {
+                            showNotification('无法找到要删除的行', 'error');
+                        }
+                        
+                        // 重置当前行
+                        currentDeleteRow = null;
+                    } else if (passwordModalMessage.textContent.includes('添加')) {
+                        // 添加操作
+                        addToBlacklist();
+                    }
+                } else {
+                    // 显示错误信息
+                    passwordError.classList.remove('hidden');
+                }
+            });
+            
+            // 按Enter键确认，按Escape键取消
+            passwordInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    confirmPasswordBtn.click();
+                } else if (event.key === 'Escape') {
+                    cancelPasswordBtn.click();
+                }
+            });
+            
+            // 点击模态框外部关闭
+            passwordModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    passwordModal.classList.add('hidden');
+                    currentDeleteRow = null;
+                }
+            });
+        });
+        
+        // 添加到黑名单函数
+        function addToBlacklist() {
+            const addIdInput = document.getElementById('addIdInput');
+            // 获取并保存ID值
+            const id = addIdInput.value.trim();
+            
+            // 验证ID必须是纯数字且不为空
+            if (!id) {
+                showNotification('ID不能为空', 'error');
+                return;
+            }
+            
+            // 检查是否为纯数字
+            if (!/^\d+$/.test(id)) {
+                showNotification('ID必须为纯数字', 'error');
+                return;
+            }
+            
+            // 检查是否已在黑名单中
+            const tableBody = document.getElementById('blacklistTableBody');
+            const existingRows = tableBody.getElementsByTagName('tr');
+            
+            for (let i = 0; i < existingRows.length; i++) {
+                if (existingRows[i].querySelector('td:nth-child(2)').textContent === id) {
+                    showNotification('该ID已在黑名单中', 'warning');
+                    return;
+                }
+            }
+            
+            // 添加新行
+            const newRow = document.createElement('tr');
+            
+            newRow.innerHTML = `
+                <td>1</td>
+                <td>${id}</td>
+                <td class="text-center">
+                    <button class="text-red-600 hover:text-red-800 transition-colors" onclick="removeFromBlacklist(this)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            
+            // 将所有行转换为数组并添加新行
+            const rowsArray = Array.from(tableBody.getElementsByTagName('tr'));
+            rowsArray.push(newRow);
+            
+            // 按ID从小到大排序（将ID转为数字进行比较）
+            rowsArray.sort((a, b) => {
+                const idA = parseInt(a.querySelector('td:nth-child(2)').textContent);
+                const idB = parseInt(b.querySelector('td:nth-child(2)').textContent);
+                return idA - idB;
+            });
+            
+            // 清空表格并重新添加排序后的行
+            while (tableBody.firstChild) {
+                tableBody.removeChild(tableBody.firstChild);
+            }
+            
+            rowsArray.forEach(row => {
+                tableBody.appendChild(row);
+            });
+            
+            // 更新序号
+            updateSerialNumbers();
+            
+            // 清空输入框
+            addIdInput.value = '';
+            
+            // 更新分页信息
+            updatePaginationInfo(rowsArray.length);
+            
+            // 显示成功消息
+            showNotification('已成功添加到黑名单', 'success');
+        }
+        
+        // 从黑名单移除
+        function removeFromBlacklist(button) {
+            currentDeleteRow = button.closest('tr');
+            const id = currentDeleteRow.querySelector('td:nth-child(2)').textContent;
+            
+            // 显示自定义密码验证模态框
+            passwordInput.value = '';
+            passwordError.classList.add('hidden');
+            passwordModalMessage.textContent = `请输入密码以移除 ${id} 从黑名单中:`;
+            passwordModal.classList.remove('hidden');
+            
+            // 聚焦到密码输入框
+            passwordInput.focus();
+        }
+        
+        // 过滤黑名单
+        function filterBlacklist(searchTerm) {
+            const tableBody = document.getElementById('blacklistTableBody');
+            const rows = tableBody.getElementsByTagName('tr');
+            
+            searchTerm = searchTerm.toLowerCase();
+            let visibleCount = 0;
+            
+            for (let i = 0; i < rows.length; i++) {
+                const idCell = rows[i].getElementsByTagName('td')[1];
+                const id = idCell.textContent.toLowerCase();
+                
+                if (id.includes(searchTerm)) {
+                    rows[i].style.display = '';
+                    visibleCount++;
+                    rows[i].getElementsByTagName('td')[0].textContent = visibleCount; // 更新序号
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+            
+            // 更新显示统计
+            updatePaginationInfo(visibleCount);
+        }
+
+        // 更新分页信息
+        function updatePaginationInfo(totalCount) {
+            // 这里简化处理，实际项目中可能需要更复杂的分页逻辑
+            const paginationInfo = document.querySelector('.flex.justify-between.items-center.mt-6 .text-gray-600');
+            if (paginationInfo) {
+                paginationInfo.textContent = `显示 1-${totalCount} 条，共 ${totalCount} 条`;
+            }
+        }
+
+        // 更新序号
+        function updateSerialNumbers() {
+            const tableBody = document.getElementById('blacklistTableBody');
+            const rows = tableBody.getElementsByTagName('tr');
+            let visibleIndex = 1;
+            
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].style.display !== 'none') {
+                    rows[i].getElementsByTagName('td')[0].textContent = visibleIndex;
+                    visibleIndex++;
+                }
+            }
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.className = `fixed bottom-4 right-4 p-4 rounded-lg shadow-lg transform transition-all duration-500 ease-in-out translate-y-20 opacity-0 z-50`;
+            
+            // 设置不同类型的样式
+            switch (type) {
+                case 'success':
+                    notification.classList.add('bg-green-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-check-circle mr-2"></i>${message}`;
+                    break;
+                case 'error':
+                    notification.classList.add('bg-red-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-times-circle mr-2"></i>${message}`;
+                    break;
+                case 'warning':
+                    notification.classList.add('bg-yellow-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-exclamation-triangle mr-2"></i>${message}`;
+                    break;
+                default:
+                    notification.classList.add('bg-blue-500', 'text-white');
+                    notification.innerHTML = `<i class="fa fa-info-circle mr-2"></i>${message}`;
+            }
+            
+            // 添加到页面
+            document.body.appendChild(notification);
+            
+            // 动画显示
+            setTimeout(() => {
+                notification.classList.remove('translate-y-20', 'opacity-0');
+            }, 10);
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                notification.classList.add('translate-y-20', 'opacity-0');
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 500);
+            }, 3000);
+        }
+        
+        // 更新源代码并提供下载
+        function updateSourceCodeAndProvideDownload() {
+            // 获取当前页面内容
+            let htmlContent = document.documentElement.outerHTML;
+            
+            // 创建Blob对象
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            
+            // 创建下载链接
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'blacklist.html';
+            
+            // 自动触发下载
+            document.body.appendChild(a);
+            a.click();
+            
+            // 清理
+            setTimeout(() => {
+                if (document.body.contains(a)) {
+                    document.body.removeChild(a);
+                }
+                URL.revokeObjectURL(url);
+            }, 100);
+        }
+        
+        // 确保DOMContentLoaded只执行一次
+        if (window.hasInitialized !== true) {
+            window.hasInitialized = true;
+            
+            // 初始化事件监听器
+            const passwordModal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordError = document.getElementById('passwordError');
+            const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+            const confirmPasswordBtn = document.getElementById('confirmPasswordBtn');
+            const passwordModalMessage = document.getElementById('passwordModalMessage');
+            
+            // 关闭密码模态框
+            cancelPasswordBtn.addEventListener('click', function() {
+                passwordModal.classList.add('hidden');
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+            });
+            
+            // 监听Enter和Escape键
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !passwordModal.classList.contains('hidden')) {
+                    cancelPasswordBtn.click();
+                }
+                if (event.key === 'Enter' && !passwordModal.classList.contains('hidden')) {
+                    confirmPasswordBtn.click();
+                }
+            });
+            
+            // 点击模态框背景关闭
+            passwordModal.addEventListener('click', function(event) {
+                if (event.target === passwordModal) {
+                    cancelPasswordBtn.click();
+                }
+            });
+        }
+    </script>
+
+</body></html>

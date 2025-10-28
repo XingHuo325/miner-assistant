@@ -164,11 +164,9 @@
       <p class="modal-message" id="announcementMessage">
         欢迎使用矿工星火助手！<br><br>
         最新更新：<br>
-        1. 新增养猪板块计算器<br>
-        2. 新增锻造室板块策略<br>
-        2. 新增合纵连横板块功能<br>
-        4. 优化页面响应式布局<br>
-        5. 修复部分BUG<br><br>
+        1. 新增合纵连横板块功能<br>
+        2.新增黑名单板块<br>
+        3. 修复部分BUG<br><br>
         更多功能正在开发中，敬请期待！
       </p>
       <button class="modal-button bg-red-600 hover:bg-red-700" onclick="closeAnnouncementModal()">我知道了</button>
@@ -203,7 +201,7 @@
       <div class="bg-gradient-primary text-white p-6 md:p-10 relative z-10 flex flex-col items-center text-center">
         <h2 class="text-2xl md:text-4xl font-bold mb-4">欢迎使用矿工星火助手</h2>
         <p class="text-lg md:text-xl opacity-90 max-w-2xl mb-8">您的一站式矿工辅助平台，点击下方模块图标，快速进入相应功能页面。</p>
-    	<p class="text-lg md:text-xl opacity-90 max-w-2xl mb-8">目前可使用功能：养猪、魔族、阵法图、八卦阵法图、锻造室、合纵连横。</p>
+    	<p class="text-lg md:text-xl opacity-90 max-w-2xl mb-8">目前可使用功能：养猪、魔族、阵法图、八卦阵法图、锻造室、合纵连横、黑名单。</p>
 
         
         <!-- 最新公告按钮 -->
@@ -309,7 +307,7 @@
           <a href="alliance.html" class="block h-full">
             <div class="bg-blue-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3">
               <div class="bg-white w-10 h-10 rounded-md flex items-center justify-center">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="41" height="41" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <!-- 连接线 -->
                   <path d="M6 6L18 18" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
                   <path d="M18 6L6 18" stroke="#3B82F6" stroke-width="2" stroke-linecap="round"/>
@@ -327,21 +325,44 @@
           </a>
         </div>
         
+        <!-- 黑名单 -->
+        <div class="bg-white rounded-xl shadow-md p-4 text-center card-hover cursor-pointer">
+          <a href="blacklist.html" class="block h-full">
+            <div class="bg-red-800 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3">
+              <div class="bg-white w-10 h-10 rounded-md flex items-center justify-center">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- 盾牌形状 -->
+                  <path d="M12 2L20 6V13.5C20 16.5 18 19 15.5 20.5C14.5 21.1 13.5 21.5 12 21.5C10.5 21.5 9.5 21.1 8.5 20.5C6 19 4 16.5 4 13.5V6L12 2Z" fill="#DC2626"/>
+                  <!-- 禁止符号 -->
+                  <path d="M15 9L9 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 9L15 15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <h3 class="font-medium text-gray-800">黑名单</h3>
+          </a>
+        </div>
+        
         <!-- 炼丹炉 -->
         <div class="bg-white rounded-xl shadow-md p-4 text-center card-hover cursor-pointer" onclick="showUnderDevelopmentAlert('炼丹炉')">
           <div class="bg-red-100 w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-3">
             <div class="bg-white w-10 h-10 rounded-md flex items-center justify-center">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg width="70" height="70" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- 丹炉底座 -->
+                <path d="M8 22H24C25.1 22 26 21.1 26 20V18C26 16.9 25.1 16 24 16H8C6.9 16 6 16.9 6 18V20C6 21.1 6.9 22 8 22Z" fill="#7F1D1D"/>
                 <!-- 丹炉主体 -->
-                <path d="M10 12H22V20C22 21.1 21.1 22 20 22H12C10.9 22 10 21.1 10 20V12Z" fill="#DC2626"/>
-                <!-- 丹炉底部 -->
-                <path d="M8 20H24V22H8V20Z" fill="#7F1D1D"/>
-                <!-- 丹炉顶部 -->
-                <path d="M14 10H18V12H14V10Z" fill="#7F1D1D"/>
+                <path d="M10 14H22V20C22 21.1 21.1 22 20 22H12C10.9 22 10 21.1 10 20V14Z" fill="#DC2626"/>
+                <!-- 丹炉装饰 -->
+                <path d="M10 16H22M10 18H22" stroke="#B91C1C" stroke-width="1" stroke-linecap="round"/>
                 <!-- 丹炉盖子 -->
-                <path d="M12 8H20V10H12V8Z" fill="#991B1B"/>
-                <!-- 火焰 -->
-                <path class="flame" d="M16 6C16 6 18 8 18 10C18 12 16 14 16 14C16 14 14 12 14 10C14 8 16 6 16 6Z" fill="#F97316"/>
+                <path d="M12 12H20C21.1 12 22 11.1 22 10V8C22 6.9 21.1 6 20 6H12C10.9 6 10 6.9 10 8V10C10 11.1 10.9 12 12 12Z" fill="#B91C1C"/>
+                <!-- 盖子装饰 -->
+                <circle cx="16" cy="8" r="2" fill="#991B1B"/>
+                <!-- 火焰 - 调整到中心位置 -->
+                <path d="M16 7C13.5 7 11.5 9 11.5 12C11.5 15 13.5 18 16 18C18.5 18 20.5 15 20.5 12C20.5 9 18.5 7 16 7Z" fill="#F97316"/>
+                <path d="M15 9C14 9 13.5 10 13.5 12C13.5 14 14 16 15 16M17 9C18 9 18.5 10 18.5 12C18.5 14 18 16 17 16" stroke="#FDBA74" stroke-width="1"/>
+                <!-- 烟雾效果 -->
+                <path d="M16 5C16 5 15 3 15 3C15 3 16 3 16 5M16 5C16 5 17 3 17 3C17 3 16 3 16 5" stroke="#F97316" stroke-width="1" stroke-linecap="round"/>
               </svg>
             </div>
           </div>
